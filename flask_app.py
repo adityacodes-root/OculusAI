@@ -9,7 +9,7 @@ CORS(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Model configuration
-MODEL_PATH = r'C:\Users\adity\Desktop\VisionXAI\eye_disease_model.keras'
+MODEL_PATH = r'C:\Users\adity\OculusAI\eye_disease_model.keras'
 IMAGE_SIZE = (256, 256)
 class_names = ['cataract', 'diabetic_retinopathy', 'glaucoma', 'normal']
 

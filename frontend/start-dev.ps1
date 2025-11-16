@@ -1,2 +1,2 @@
-Set-Location C:\Users\adity\Downloads\frontend
+Set-Location C:\Users\adity\OculusAI\frontend
 npm run dev
