@@ -5,8 +5,30 @@ import { ArrowLeft, TrendingUp, Layers, Zap, Target } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 export default function EvaluationPage() {
+  const accuracyData = [
+    { epoch: 1, accuracy: 65 },
+    { epoch: 2, accuracy: 72 },
+    { epoch: 3, accuracy: 78 },
+    { epoch: 4, accuracy: 83 },
+    { epoch: 5, accuracy: 86 },
+    { epoch: 6, accuracy: 88 },
+    { epoch: 7, accuracy: 89 },
+    { epoch: 8, accuracy: 88.5 }
+  ]
+
+  const lossData = [
+    { epoch: 1, loss: 1.70 },
+    { epoch: 2, loss: 1.30 },
+    { epoch: 3, loss: 0.96 },
+    { epoch: 4, loss: 0.70 },
+    { epoch: 5, loss: 0.56 },
+    { epoch: 6, loss: 0.46 },
+    { epoch: 7, loss: 0.40 },
+    { epoch: 8, loss: 0.38 }
+  ]
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -215,18 +237,41 @@ export default function EvaluationPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="p-6 animate-fade-in-up border-border">
               <h4 className="text-lg font-semibold mb-4 text-foreground">Accuracy Over Epochs</h4>
-              <div className="h-64 flex items-end justify-around gap-2">
-                {[65, 72, 78, 83, 86, 88, 89, 88.5].map((height, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                    <div className="w-full bg-primary/20 rounded-t relative" style={{ height: `${height}%` }}>
-                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold text-foreground">
-                        {height}%
-                      </div>
-                    </div>
-                    <span className="text-xs text-muted-foreground">E{i + 1}</span>
-                  </div>
-                ))}
-              </div>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={accuracyData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis 
+                    dataKey="epoch" 
+                    stroke="hsl(var(--muted-foreground))"
+                    tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                    label={{ value: 'Epoch', position: 'insideBottom', offset: -5, fill: 'hsl(var(--muted-foreground))' }}
+                  />
+                  <YAxis 
+                    stroke="hsl(var(--muted-foreground))"
+                    tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                    label={{ value: 'Accuracy (%)', angle: -90, position: 'insideLeft', fill: 'hsl(var(--muted-foreground))' }}
+                    domain={[0, 100]}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--popover))', 
+                      border: '2px solid hsl(var(--border))',
+                      borderRadius: '8px',
+                      color: 'hsl(var(--popover-foreground))'
+                    }}
+                    formatter={(value: any) => [`${value}%`, 'Accuracy']}
+                  />
+                  <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="accuracy" 
+                    stroke="#10b981" 
+                    strokeWidth={3}
+                    dot={{ fill: '#10b981', r: 5 }}
+                    activeDot={{ r: 7 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
               <p className="text-sm text-muted-foreground mt-4">
                 Model achieved ~88.5% validation accuracy after 8 epochs
               </p>
@@ -234,18 +279,41 @@ export default function EvaluationPage() {
 
             <Card className="p-6 animate-fade-in-up border-border">
               <h4 className="text-lg font-semibold mb-4 text-foreground">Loss Over Epochs</h4>
-              <div className="h-64 flex items-end justify-around gap-2">
-                {[85, 65, 48, 35, 28, 23, 20, 19].map((height, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                    <div className="w-full bg-red-500/20 rounded-t relative" style={{ height: `${height}%` }}>
-                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold text-foreground">
-                        {(height / 100 * 2).toFixed(2)}
-                      </div>
-                    </div>
-                    <span className="text-xs text-muted-foreground">E{i + 1}</span>
-                  </div>
-                ))}
-              </div>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={lossData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis 
+                    dataKey="epoch" 
+                    stroke="hsl(var(--muted-foreground))"
+                    tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                    label={{ value: 'Epoch', position: 'insideBottom', offset: -5, fill: 'hsl(var(--muted-foreground))' }}
+                  />
+                  <YAxis 
+                    stroke="hsl(var(--muted-foreground))"
+                    tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                    label={{ value: 'Loss', angle: -90, position: 'insideLeft', fill: 'hsl(var(--muted-foreground))' }}
+                    domain={[0, 2]}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--popover))', 
+                      border: '2px solid hsl(var(--border))',
+                      borderRadius: '8px',
+                      color: 'hsl(var(--popover-foreground))'
+                    }}
+                    formatter={(value: any) => [value.toFixed(2), 'Loss']}
+                  />
+                  <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="loss" 
+                    stroke="#ef4444" 
+                    strokeWidth={3}
+                    dot={{ fill: '#ef4444', r: 5 }}
+                    activeDot={{ r: 7 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
               <p className="text-sm text-muted-foreground mt-4">
                 Training loss decreased steadily, converging around 0.38
               </p>
