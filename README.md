@@ -1,4 +1,4 @@
-# VisionXAI - Eye Disease Detection System
+# OculusAI - Eye Disease Detection System
 
 An AI-powered eye disease detection platform that uses deep learning to identify common eye conditions from retinal images. The system provides real-time analysis with detailed confidence scores and medical information.
 
