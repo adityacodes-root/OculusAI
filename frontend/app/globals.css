@@ -4,59 +4,59 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Bold, unique color palette: deep purple/violet with vibrant cyan accents */
-  --background: oklch(0.97 0.002 280);
-  --foreground: oklch(0.12 0.004 280);
+  /* Improved color palette with better contrast for readability */
+  --background: oklch(0.99 0.001 280);
+  --foreground: oklch(0.09 0.004 280);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.12 0.004 280);
+  --card-foreground: oklch(0.09 0.004 280);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.12 0.004 280);
-  --primary: oklch(0.52 0.25 270);
-  --primary-foreground: oklch(0.98 0.002 280);
-  --secondary: oklch(0.48 0.22 260);
-  --secondary-foreground: oklch(0.98 0.002 280);
-  --muted: oklch(0.95 0.003 280);
-  --muted-foreground: oklch(0.5 0.02 280);
-  --accent: oklch(0.58 0.25 200);
-  --accent-foreground: oklch(0.08 0.002 280);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.93 0.003 280);
-  --input: oklch(0.96 0.002 280);
-  --ring: oklch(0.52 0.25 270);
-  --chart-1: oklch(0.58 0.25 200);
-  --chart-2: oklch(0.52 0.25 270);
-  --chart-3: oklch(0.6 0.15 250);
-  --chart-4: oklch(0.48 0.22 260);
-  --chart-5: oklch(0.55 0.2 280);
+  --popover-foreground: oklch(0.09 0.004 280);
+  --primary: oklch(0.48 0.22 270);
+  --primary-foreground: oklch(0.99 0.001 280);
+  --secondary: oklch(0.44 0.18 260);
+  --secondary-foreground: oklch(0.99 0.001 280);
+  --muted: oklch(0.96 0.002 280);
+  --muted-foreground: oklch(0.45 0.02 280);
+  --accent: oklch(0.52 0.20 200);
+  --accent-foreground: oklch(0.99 0.001 280);
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(0.99 0.001 280);
+  --border: oklch(0.90 0.002 280);
+  --input: oklch(0.97 0.001 280);
+  --ring: oklch(0.48 0.22 270);
+  --chart-1: oklch(0.52 0.20 200);
+  --chart-2: oklch(0.48 0.22 270);
+  --chart-3: oklch(0.56 0.15 250);
+  --chart-4: oklch(0.44 0.18 260);
+  --chart-5: oklch(0.50 0.18 280);
   --radius: 0.625rem;
 }
 
 .dark {
-  --background: oklch(0.06 0.002 280);
-  --foreground: oklch(0.96 0.002 280);
-  --card: oklch(0.11 0.003 280);
-  --card-foreground: oklch(0.96 0.002 280);
-  --popover: oklch(0.11 0.003 280);
-  --popover-foreground: oklch(0.96 0.002 280);
-  --primary: oklch(0.65 0.25 270);
-  --primary-foreground: oklch(0.06 0.002 280);
-  --secondary: oklch(0.58 0.22 260);
-  --secondary-foreground: oklch(0.06 0.002 280);
-  --muted: oklch(0.22 0.003 280);
-  --muted-foreground: oklch(0.68 0.01 280);
-  --accent: oklch(0.65 0.28 200);
-  --accent-foreground: oklch(0.06 0.002 280);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.18 0.003 280);
-  --input: oklch(0.14 0.002 280);
-  --ring: oklch(0.65 0.25 270);
-  --chart-1: oklch(0.65 0.28 200);
-  --chart-2: oklch(0.65 0.25 270);
-  --chart-3: oklch(0.7 0.2 250);
-  --chart-4: oklch(0.58 0.22 260);
-  --chart-5: oklch(0.6 0.24 280);
+  --background: oklch(0.08 0.002 280);
+  --foreground: oklch(0.96 0.001 280);
+  --card: oklch(0.13 0.003 280);
+  --card-foreground: oklch(0.96 0.001 280);
+  --popover: oklch(0.13 0.003 280);
+  --popover-foreground: oklch(0.96 0.001 280);
+  --primary: oklch(0.60 0.20 270);
+  --primary-foreground: oklch(0.08 0.002 280);
+  --secondary: oklch(0.55 0.18 260);
+  --secondary-foreground: oklch(0.08 0.002 280);
+  --muted: oklch(0.20 0.003 280);
+  --muted-foreground: oklch(0.65 0.01 280);
+  --accent: oklch(0.58 0.22 200);
+  --accent-foreground: oklch(0.08 0.002 280);
+  --destructive: oklch(0.50 0.18 27);
+  --destructive-foreground: oklch(0.96 0.001 280);
+  --border: oklch(0.22 0.003 280);
+  --input: oklch(0.17 0.002 280);
+  --ring: oklch(0.60 0.20 270);
+  --chart-1: oklch(0.58 0.22 200);
+  --chart-2: oklch(0.60 0.20 270);
+  --chart-3: oklch(0.65 0.18 250);
+  --chart-4: oklch(0.55 0.18 260);
+  --chart-5: oklch(0.58 0.20 280);
 }
 
 @theme inline {
@@ -243,36 +243,77 @@
 
   /* Smooth transitions for interactive elements */
   .transition-smooth {
-    @apply transition-all duration-300 ease-out;
+    @apply transition-all duration-200 ease-out;
   }
 
   .transition-smooth-lg {
-    @apply transition-all duration-500 ease-in-out;
+    @apply transition-all duration-300 ease-in-out;
   }
 
   /* Glass morphism effect */
   .glass {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
   }
 
   .dark .glass {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  /* Hover effects */
+  /* Subtle hover effects - improved readability */
   .hover-lift {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
   }
 
   .dark .hover-lift:hover {
-    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Card hover - no transform, just border highlight */
+  .hover-card-subtle {
+    transition: border-color 0.2s ease-out;
+  }
+
+  .hover-card-subtle:hover {
+    border-color: hsl(var(--primary) / 0.5);
+  }
+
+  /* Custom scrollbar styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--muted) / 0.3);
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.3);
+    border-radius: 4px;
+    transition: background 0.2s ease;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.5);
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--muted) / 0.2);
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.4);
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.6);
   }
 }

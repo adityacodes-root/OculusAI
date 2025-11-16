@@ -20,7 +20,13 @@ export default function Home() {
             <Link href="/analyze" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth">
               Analyze
             </Link>
-            <Link href="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden sm:inline">
+            <Link href="/diseases" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden sm:inline">
+              Diseases
+            </Link>
+            <Link href="/evaluation" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden sm:inline">
+              Model
+            </Link>
+            <Link href="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
               About
             </Link>
             <ThemeToggle />
@@ -51,7 +57,7 @@ export default function Home() {
           </h1>
           
           <p className="text-base sm:text-lg text-muted-foreground text-balance max-w-2xl mx-auto mb-8 sm:mb-10 px-4 animate-fade-in-up" style={{ animationDelay: '0.35s' }}>
-            OculusAI uses advanced machine learning to detect eye diseases from retinal images with 98.2% accuracy. Fast, secure, and trusted by healthcare professionals.
+            OculusAI uses deep learning to detect eye diseases from retinal images, demonstrating the potential of AI in medical imaging and ophthalmology.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4 animate-fade-in-up" style={{ animationDelay: '0.45s' }}>
@@ -75,29 +81,29 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-center mb-16 animate-fade-in-up">Why Choose OculusAI</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: Brain, title: 'Advanced AI', desc: 'Trained on 100K+ images', stat: '100K+' },
-              { icon: Zap, title: 'Instant Results', desc: 'Analyze in seconds', stat: '<3s' },
-              { icon: Shield, title: 'HIPAA Secure', desc: 'End-to-end encryption', stat: '100%' },
-              { icon: BarChart3, title: '98.2% Accurate', desc: 'Clinically validated', stat: '98.2%' }
+              { icon: Brain, title: 'Deep Learning', desc: 'CNN-based architecture', stat: 'AI' },
+              { icon: Zap, title: 'Real-Time', desc: 'Fast predictions', stat: '<5s' },
+              { icon: Shield, title: 'Secure', desc: 'Privacy-focused', stat: '100%' },
+              { icon: BarChart3, title: 'Multi-Class', desc: '4 disease categories', stat: '4x' }
             ].map((item, i) => {
               const Icon = item.icon
               return (
                 <div 
                   key={i} 
-                  className="p-6 rounded-xl border border-border/40 bg-card hover:border-primary/40 transition-smooth-lg hover-lift animate-fade-in-up relative overflow-hidden group"
+                  className="p-6 rounded-xl border border-border bg-card hover-card-subtle transition-smooth animate-fade-in-up relative overflow-hidden group"
                   style={{ animationDelay: `${0.1 * i}s` }}
                 >
                   {/* Background gradient on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                   
                   <div className="relative">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mb-4 transition-transform duration-200">
                       <Icon className="w-6 h-6 text-primary" />
                     </div>
-                    <div className="text-3xl font-bold text-primary mb-2 animate-float">
+                    <div className="text-3xl font-bold text-primary mb-2">
                       {item.stat}
                     </div>
-                    <h3 className="font-semibold mb-2">{item.title}</h3>
+                    <h3 className="font-semibold mb-2 text-foreground">{item.title}</h3>
                     <p className="text-sm text-muted-foreground">{item.desc}</p>
                   </div>
                 </div>
@@ -111,33 +117,33 @@ export default function Home() {
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 animate-fade-in-up">
-            <h2 className="text-3xl font-bold mb-4">Trusted by Healthcare Professionals</h2>
+            <h2 className="text-3xl font-bold mb-4">Project Capabilities</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Our AI-powered platform is making a real impact in early detection and prevention of eye diseases worldwide.
+              AI-powered retinal disease detection using deep learning technology.
             </p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { label: 'Images Analyzed', value: '2.5M+', change: '+12% this month', icon: Eye },
-              { label: 'Healthcare Partners', value: '850+', change: 'Across 40 countries', icon: Shield },
-              { label: 'Early Detections', value: '125K+', change: 'Lives impacted', icon: Brain },
-              { label: 'Avg. Analysis Time', value: '2.8s', change: '99.9% uptime', icon: Zap }
+              { label: 'Disease Classes', value: '4', change: 'Detection categories', icon: Eye },
+              { label: 'Model Architecture', value: 'CNN', change: 'Keras-based model', icon: Brain },
+              { label: 'Image Input', value: '256x256', change: 'Resolution support', icon: Shield },
+              { label: 'Prediction Speed', value: '< 5s', change: 'Real-time analysis', icon: Zap }
             ].map((stat, idx) => {
               const Icon = stat.icon
               return (
                 <Card 
                   key={idx} 
-                  className="p-6 text-center hover-lift animate-fade-in-up border-border/40 hover:border-primary/30 transition-smooth-lg"
+                  className="p-6 text-center hover-card-subtle animate-fade-in-up border-border transition-smooth"
                   style={{ animationDelay: `${0.1 * idx}s` }}
                 >
-                  <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 mb-4">
+                  <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 mb-4">
                     <Icon className="w-6 h-6 text-primary" />
                   </div>
-                  <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent mb-2 animate-gradient">
+                  <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
                     {stat.value}
                   </div>
-                  <div className="font-semibold mb-1 text-sm">{stat.label}</div>
+                  <div className="font-semibold mb-1 text-sm text-foreground">{stat.label}</div>
                   <div className="text-xs text-muted-foreground">{stat.change}</div>
                 </Card>
               )
@@ -149,24 +155,24 @@ export default function Home() {
       {/* CTA */}
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
-          <h2 className="text-4xl font-bold mb-4">Ready to Transform Eye Care?</h2>
-          <p className="text-muted-foreground mb-8">Start analyzing retinal images with OculusAI today.</p>
+          <h2 className="text-4xl font-bold mb-4">Ready to Explore AI-Powered Analysis?</h2>
+          <p className="text-muted-foreground mb-8">See how AI can assist in eye disease detection.</p>
           <Link href="/analyze">
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground transition-smooth">
-              Begin Analysis
+              Start Analysis
             </Button>
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 py-6 sm:py-8 px-4 bg-muted/30 mt-auto">
+      <footer className="border-t border-border py-6 sm:py-8 px-4 bg-muted/30 mt-auto">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs sm:text-sm text-muted-foreground text-center md:text-left">© 2025 OculusAI. All rights reserved.</p>
           <div className="flex gap-4 sm:gap-6">
-            <a href="#" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth">Privacy</a>
-            <a href="#" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth">Terms</a>
-            <a href="#" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth">Contact</a>
+            <Link href="/diseases" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth">Diseases</Link>
+            <Link href="/evaluation" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth">Evaluation</Link>
+            <Link href="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth">About</Link>
           </div>
         </div>
       </footer>

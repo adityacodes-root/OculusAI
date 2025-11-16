@@ -159,21 +159,21 @@ export default function AnalyzePage() {
             </div>
 
             <Card
-              className={`p-8 sm:p-12 border-2 border-dashed cursor-pointer transition-smooth-lg hover-lift animate-scale-in ${
-                isDragging ? 'border-primary bg-primary/10 scale-105' : 'hover:border-primary/50 hover:bg-primary/5'
+              className={`p-8 sm:p-12 border-2 border-dashed cursor-pointer transition-smooth hover-card-subtle animate-scale-in ${
+                isDragging ? 'border-primary bg-primary/5 scale-[1.02]' : 'hover:border-primary/40 hover:bg-primary/5'
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
               <label className="flex flex-col items-center justify-center gap-3 sm:gap-4 cursor-pointer">
-                <div className={`p-3 sm:p-4 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 transition-all ${
-                  isDragging ? 'scale-110 animate-pulse-glow' : ''
+                <div className={`p-3 sm:p-4 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 transition-all ${
+                  isDragging ? 'scale-110' : ''
                 }`}>
                   <Upload className={`w-6 sm:w-8 h-6 sm:h-8 text-primary transition-transform ${isDragging ? 'scale-110' : ''}`} />
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-base sm:text-lg mb-1">
+                  <p className="font-semibold text-base sm:text-lg mb-1 text-foreground">
                     {isDragging ? 'Drop your image here' : 'Drag your image here'}
                   </p>
                   <p className="text-xs sm:text-sm text-muted-foreground">or click to select from your computer</p>
@@ -188,7 +188,7 @@ export default function AnalyzePage() {
             </Card>
 
             {uploadError && (
-              <Card className="p-4 bg-destructive/10 border-destructive/30 animate-scale-in mt-4">
+              <Card className="p-4 bg-destructive/5 border-destructive/20 animate-scale-in mt-4">
                 <p className="text-xs sm:text-sm text-destructive flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 flex-shrink-0" />
                   {uploadError}
@@ -229,18 +229,18 @@ export default function AnalyzePage() {
               <div className="lg:col-span-1 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                 {showPhoto ? (
                   <div className="space-y-3 animate-scale-in">
-                    <div className="rounded-xl overflow-hidden border border-border/40 bg-muted aspect-square relative group">
+                    <div className="rounded-xl overflow-hidden border border-border bg-muted aspect-square relative group">
                       <img
                         src={previewUrl || '/placeholder.svg'}
                         alt="Retinal image"
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className="absolute bottom-3 left-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                      <div className="absolute bottom-3 left-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <Button
                           size="sm"
                           variant="secondary"
-                          className="flex-1 backdrop-blur-sm bg-white/90 hover:bg-white text-xs"
+                          className="flex-1 backdrop-blur-sm bg-background/95 hover:bg-background border-2 border-border text-foreground text-xs"
                           onClick={() => {
                             const link = document.createElement('a')
                             link.href = previewUrl || ''
@@ -305,7 +305,7 @@ export default function AnalyzePage() {
                       
                       {/* Loading messages */}
                       <div className="text-center space-y-2">
-                        <p className="font-semibold text-lg">Analyzing Retinal Image</p>
+                        <p className="font-semibold text-lg text-foreground">Analyzing Retinal Image</p>
                         <p className="text-sm text-muted-foreground animate-pulse">
                           AI model processing image patterns...
                         </p>
@@ -327,7 +327,7 @@ export default function AnalyzePage() {
                         {['Detection', 'Analysis', 'Results'].map((step, idx) => (
                           <div key={step} className="animate-fade-in-up" style={{ animationDelay: `${idx * 0.2}s` }}>
                             <div className={`w-8 h-8 mx-auto rounded-full border-2 flex items-center justify-center mb-2 ${
-                              idx === 0 ? 'border-primary bg-primary/20 text-primary' : 'border-muted text-muted-foreground'
+                              idx === 0 ? 'border-primary bg-primary/10 text-primary' : 'border-muted text-muted-foreground'
                             }`}>
                               {idx + 1}
                             </div>
@@ -338,7 +338,7 @@ export default function AnalyzePage() {
                     </div>
                   </Card>
                 ) : analysisResult ? (
-                  <ResultsDisplay result={analysisResult} />
+                  <ResultsDisplay result={analysisResult} imageUrl={previewUrl || undefined} />
                 ) : null}
               </div>
             </div>

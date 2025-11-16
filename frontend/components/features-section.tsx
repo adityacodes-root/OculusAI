@@ -4,23 +4,23 @@ import { Card } from '@/components/ui/card'
 const features = [
   {
     icon: Brain,
-    title: 'Advanced AI Model',
-    description: 'Trained on 100,000+ retinal images using deep learning algorithms'
+    title: 'Deep Learning Model',
+    description: 'Convolutional Neural Network trained to detect multiple eye diseases'
   },
   {
     icon: Zap,
-    title: 'Instant Analysis',
-    description: 'Get comprehensive results in seconds, not hours'
+    title: 'Real-Time Analysis',
+    description: 'Get predictions within seconds using Flask backend and Keras model'
   },
   {
     icon: Shield,
-    title: 'Secure & Private',
-    description: 'HIPAA-compliant processing with end-to-end encryption'
+    title: 'Privacy Focused',
+    description: 'All processing done locally with no data storage or external sharing'
   },
   {
     icon: TrendingUp,
-    title: 'Clinical Accuracy',
-    description: '98.2% accuracy rate validated by ophthalmologists'
+    title: 'Multi-Class Detection',
+    description: 'Detects cataract, glaucoma, diabetic retinopathy, and normal eyes'
   }
 ]
 
@@ -29,20 +29,20 @@ export function FeaturesSection() {
     <section className="py-16 px-4 bg-muted/40">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-2">Why Choose OculusAI</h2>
-          <p className="text-muted-foreground">Cutting-edge technology for eye disease detection</p>
+          <h2 className="text-3xl font-bold text-foreground mb-2">Project Features</h2>
+          <p className="text-muted-foreground">Academic demonstration of AI technology in ophthalmology</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, idx) => {
             const Icon = feature.icon
             return (
-              <Card key={idx} className="p-6 bg-card border-border hover:border-primary/30 transition-colors">
+              <Card key={idx} className="p-6 bg-card border-border hover-card-subtle transition-smooth">
                 <div className="p-3 rounded-lg bg-primary/10 w-fit mb-4">
                   <Icon className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
               </Card>
             )
           })}
