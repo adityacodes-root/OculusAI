@@ -1,15 +1,15 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { Eye, AlertCircle, CheckCircle, XCircle, Loader2, Info, TrendingUp, TrendingDown } from "lucide-react"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
+import { Eye, AlertCircle, CheckCircle, XCircle, Loader2, Info, TrendingUp, TrendingDown, ArrowLeft } from "lucide-react"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { ColorBlindnessPDFGenerator } from "@/components/colorblindness-pdf-generator"
 
 interface TestImage {
@@ -171,19 +171,23 @@ export default function ColorBlindnessTest() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <Header />
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <div className="border-b border-border/40 bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3 sm:gap-4 animate-fade-in-up">
+            <Link href="/">
+              <Button variant="ghost" size="icon" className="transition-smooth">
+                <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
+              </Button>
+            </Link>
+            <h1 className="text-lg sm:text-2xl font-bold">Colour Blindness Test</h1>
+          </div>
+          <ThemeToggle />
+        </div>
+      </div>
 
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
-          {/* Header Section */}
-          <div className="text-center mb-12">
-            <Eye className="h-16 w-16 mx-auto mb-4 text-blue-600" />
-            <h1 className="text-4xl font-bold mb-4">Ishihara Colour Blindness Test</h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300">
-              Test your colour vision with our AI-powered Ishihara digit recognition system
-            </p>
-          </div>
 
           {error && (
             <Alert variant="destructive" className="mb-6">
@@ -451,8 +455,6 @@ export default function ColorBlindnessTest() {
           )}
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }

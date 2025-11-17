@@ -15,7 +15,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 # Model configuration
 MODEL_PATH = r'C:\Users\adity\OculusAI\eye_disease_model.keras'
 ISHIHARA_MODEL_PATH = r'C:\Users\adity\OculusAI\ishihara_digit_model.keras'
-ISHIHARA_DATA_DIR = r'C:\Users\adity\Downloads\archive\data'
+ISHIHARA_DATA_DIR = r'C:\Users\adity\OculusAI\CBTestImages'
 IMAGE_SIZE = (256, 256)
 ISHIHARA_IMAGE_SIZE = (128, 128)
 class_names = ['cataract', 'diabetic_retinopathy', 'glaucoma', 'normal']

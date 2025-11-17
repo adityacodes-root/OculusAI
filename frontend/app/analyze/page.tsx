@@ -13,7 +13,6 @@ export default function AnalyzePage() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [analysisResult, setAnalysisResult] = useState<any>(null)
   const [showPhoto, setShowPhoto] = useState(false)
-  const [showChatbot, setShowChatbot] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
 
@@ -128,7 +127,6 @@ export default function AnalyzePage() {
     setPreviewUrl(null)
     setAnalysisResult(null)
     setShowPhoto(false)
-    setShowChatbot(false)
     setUploadError(null)
   }
 
@@ -348,44 +346,6 @@ export default function AnalyzePage() {
                 ) : null}
               </div>
             </div>
-
-            {analysisResult && (
-              <div className="flex justify-end animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                <Button
-                  onClick={() => setShowChatbot(!showChatbot)}
-                  className="bg-primary hover:bg-primary/90 transition-smooth w-full sm:w-auto"
-                >
-                  {showChatbot ? 'Close' : 'Ask Questions'}
-                </Button>
-              </div>
-            )}
-
-            {showChatbot && (
-              <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 w-auto sm:w-80 h-96 bg-card border border-border/40 rounded-xl shadow-lg flex flex-col animate-scale-in z-50">
-                <div className="p-4 border-b border-border/40 flex items-center justify-between">
-                  <h3 className="font-bold text-sm sm:text-base">OculusAI Assistant</h3>
-                  <button
-                    onClick={() => setShowChatbot(false)}
-                    className="text-muted-foreground hover:text-foreground transition-smooth"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <div className="flex-1 p-4 overflow-auto flex items-center justify-center">
-                  <p className="text-center text-xs sm:text-sm text-muted-foreground">
-                    Chat interface coming soon. Ask your questions about the analysis here.
-                  </p>
-                </div>
-                <div className="p-4 border-t border-border/40">
-                  <input
-                    type="text"
-                    placeholder="Ask a question..."
-                    className="w-full px-3 py-2 rounded-lg bg-muted border border-border/40 text-xs sm:text-sm placeholder-muted-foreground disabled:opacity-50 transition-smooth"
-                    disabled
-                  />
-                </div>
-              </div>
-            )}
           </div>
         )}
       </main>
