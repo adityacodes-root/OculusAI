@@ -126,10 +126,12 @@ export function ResultsDisplay({ result, imageUrl }: ResultsDisplayProps) {
                   <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Primary Diagnosis</span>
                 </div>
                 <h2 className="text-3xl font-bold text-foreground mb-2">{result.primaryDiagnosis}</h2>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                  {getSeverityIcon(result.severity)}
-                  <span className="text-sm font-medium text-foreground">{result.severity} Severity</span>
-                </div>
+                {result.primaryDiagnosis.toLowerCase() !== 'normal' && result.severity && (
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                    {getSeverityIcon(result.severity)}
+                    <span className="text-sm font-medium text-foreground">{result.severity} Severity</span>
+                  </div>
+                )}
               </div>
               
               <p className="text-sm text-muted-foreground leading-relaxed">

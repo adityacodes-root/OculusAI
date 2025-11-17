@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Eye, AlertCircle, CheckCircle, XCircle, Loader2, Info, TrendingUp, TrendingDown, ArrowLeft } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { ColorBlindnessPDFGenerator } from "@/components/colorblindness-pdf-generator"
+import { MobileNav } from '@/components/mobile-nav'
 
 interface TestImage {
   id: number
@@ -74,7 +75,8 @@ export default function ColorBlindnessTest() {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch("http://localhost:5000/api/colorblindness/start-test?count=20")
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const response = await fetch(`${apiUrl}/api/colorblindness/start-test?count=20`)
       if (!response.ok) throw new Error("Failed to start test")
       const data = await response.json()
       setTestSession(data)
@@ -113,7 +115,8 @@ export default function ColorBlindnessTest() {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch("http://localhost:5000/api/colorblindness/evaluate", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const response = await fetch(`${apiUrl}/api/colorblindness/evaluate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ responses: finalResponses }),
@@ -172,21 +175,39 @@ export default function ColorBlindnessTest() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <div className="border-b border-border/40 bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+      <nav className="border-b border-border/40 bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4 animate-fade-in-up">
+          <div className="flex items-center gap-2">
             <Link href="/">
-              <Button variant="ghost" size="icon" className="transition-smooth">
-                <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
-              </Button>
+              <span className="text-lg sm:text-xl font-bold cursor-pointer">OculusAI</span>
             </Link>
-            <h1 className="text-lg sm:text-2xl font-bold">Colour Blindness Test</h1>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-3 sm:gap-6">
+            <Link href="/" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Home
+            </Link>
+            <Link href="/analyze" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Retinal Test
+            </Link>
+            <Link href="/colorblindness" className="text-xs sm:text-sm text-foreground font-medium hover:text-foreground transition-smooth hidden md:inline">
+              Colour Blindness Test
+            </Link>
+            <Link href="/diseases" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Diseases
+            </Link>
+            <Link href="/evaluation" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Model
+            </Link>
+            <Link href="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              About
+            </Link>
+            <ThemeToggle />
+            <MobileNav />
+          </div>
         </div>
-      </div>
+      </nav>
 
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-6 sm:py-12 animate-fade-in-up">
         <div className="max-w-4xl mx-auto">
 
           {error && (
@@ -232,13 +253,6 @@ export default function ColorBlindnessTest() {
                   </div>
                 </div>
 
-                <Alert>
-                  <Info className="h-4 w-4" />
-                  <AlertDescription>
-                    This is a screening tool only. For medical diagnosis, please consult an eye care professional.
-                  </AlertDescription>
-                </Alert>
-
                 <Button onClick={startTest} disabled={loading} size="lg" className="w-full">
                   {loading ? (
                     <>
@@ -267,7 +281,7 @@ export default function ColorBlindnessTest() {
                 {/* Image Display */}
                 <div className="flex justify-center p-8 bg-gray-100 dark:bg-gray-800 rounded-lg">
                   <img
-                    src={`http://localhost:5000/api/colorblindness/image/${currentImage.filename}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/colorblindness/image/${currentImage.filename}`}
                     alt={`Test image ${currentIndex + 1}`}
                     className="max-w-md w-full h-auto rounded-lg shadow-lg"
                   />
@@ -279,7 +293,9 @@ export default function ColorBlindnessTest() {
                     <label htmlFor="digit-input" className="block text-sm font-medium mb-2">
                       What digit do you see? (0-9)
                     </label>
-                    <div className="flex gap-3">
+                    
+                    {/* Desktop Input */}
+                    <div className="hidden sm:flex gap-3">
                       <Input
                         id="digit-input"
                         type="number"
@@ -293,6 +309,37 @@ export default function ColorBlindnessTest() {
                         autoFocus
                       />
                       <Button onClick={submitAnswer} disabled={userInput === "" || loading} size="lg">
+                        {loading ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : currentIndex + 1 === testSession?.total_images ? (
+                          "Finish"
+                        ) : (
+                          "Next"
+                        )}
+                      </Button>
+                    </div>
+
+                    {/* Mobile Number Buttons */}
+                    <div className="sm:hidden space-y-3">
+                      <div className="grid grid-cols-5 gap-2">
+                        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => (
+                          <Button
+                            key={digit}
+                            variant={userInput === digit.toString() ? "default" : "outline"}
+                            size="lg"
+                            onClick={() => setUserInput(digit.toString())}
+                            className="text-xl h-14 w-full"
+                          >
+                            {digit}
+                          </Button>
+                        ))}
+                      </div>
+                      <Button 
+                        onClick={submitAnswer} 
+                        disabled={userInput === "" || loading} 
+                        size="lg"
+                        className="w-full"
+                      >
                         {loading ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : currentIndex + 1 === testSession?.total_images ? (
@@ -329,14 +376,10 @@ export default function ColorBlindnessTest() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                      <p className="text-sm text-gray-600 dark:text-gray-300">Correct Answers</p>
-                      <p className="text-3xl font-bold text-blue-600">{result.total_correct}/{result.total_questions}</p>
-                    </div>
-                    <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                      <p className="text-sm text-gray-600 dark:text-gray-300">Confidence</p>
-                      <p className="text-3xl font-bold text-purple-600 capitalize">{result.diagnosis.confidence}</p>
+                  <div className="flex justify-center">
+                    <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 text-center mb-2">Correct Answers</p>
+                      <p className="text-4xl font-bold text-blue-600 text-center">{result.total_correct}/{result.total_questions}</p>
                     </div>
                   </div>
                 </CardContent>

@@ -35,34 +35,23 @@ A web platform that uses AI to analyze vision health. Built with two deep learni
 - Real-time image preview and analysis
 - Interactive test interface for color vision assessment
 
-## 🏗️ Project Structure
+
+## Project Structure
 
 ```
 OculusAI/
-├── frontend/                          # Next.js React Application
-│   ├── app/
-│   │   ├── page.tsx                  # Landing page
-│   │   ├── analyze/page.tsx          # Retina test - image upload & analysis
-│   │   ├── colorblindness/page.tsx   # Color test - Ishihara interactive test
-│   │   ├── diseases/page.tsx         # Eye disease information
-│   │   ├── evaluation/page.tsx       # Model performance & architecture
-│   │   ├── about/page.tsx            # About page
-│   │   └── layout.tsx                # Root layout with theme
-│   ├── components/
-│   │   ├── ui/                       # Reusable UI components (shadcn)
-│   │   ├── header.tsx                # Navigation header with theme toggle
-│   │   ├── footer.tsx                # Footer component
-│   │   ├── upload-section.tsx        # Image upload widget
-│   │   ├── results-display.tsx       # Retina analysis results
-│   │   ├── pdf-report-generator.tsx  # Retina PDF report
-│   │   ├── colorblindness-pdf-generator.tsx  # Color vision PDF report
-│   │   └── theme-toggle.tsx          # Dark/light mode switch
-│   ├── lib/
-│   │   └── utils.ts                  # Utility functions
-│   ├── public/                       # Static assets
-│   ├── package.json                  # Node dependencies
-│   └── next.config.mjs               # Next.js configuration
-│
+├── frontend/                  # Next.js app
+│   ├── app/                  # Pages (analyze, colorblindness, diseases, etc.)
+│   ├── components/           # UI components and PDF generators
+│   ├── public/samples/       # Sample retinal images for testing
+│   └── .env.local           # API URL configuration
+├── CBTestImages/             # Ishihara test images (40 plates)
+├── Sample_Retinal_Images/    # Source sample images
+├── flask_app.py              # Main API server with image validation
+├── app_streamlit.py          # Alternative UI for retina test
+├── train_ishihara_model.py   # Model training script
+└── *.keras                   # Model files (not in repo)
+```
 
 ## Tech Stack
 
@@ -115,6 +104,14 @@ npm install
 cd ..
 ```
 
+4. **Configure Network Access (for mobile testing)**
+- Update `frontend/.env.local` with your local IP address:
+```bash
+NEXT_PUBLIC_API_URL=http://YOUR_LOCAL_IP:5000
+```
+- Find your IP: Run `ipconfig` (Windows) or `ifconfig` (Mac/Linux)
+- The Flask server runs on `0.0.0.0:5000` to allow network access
+
 ### Run It
 
 Open three terminals:
@@ -132,13 +129,16 @@ streamlit run app_streamlit.py
 ```
 
 Then visit:
-- Main app: http://localhost:3000
-- API: http://localhost:5000
-- Streamlit: http://localhost:8501
+- **Main app (desktop)**: http://localhost:3000
+- **Main app (mobile)**: http://YOUR_LOCAL_IP:3000
+- **API**: http://localhost:5000
+- **Streamlit**: http://localhost:8501
+
+**Note**: For mobile access, ensure both devices are on the same WiFi network.
 
 ## How the Color Test Works
 
-The Ishihara model doesn't just check if you got the digit right - it actually reads the plate itself. This lets it work even if someone enters the wrong answer intentionally.
+The Ishihara model doesn't just check if you got the digit right - it actually reads the plate itself.
 
 The test uses 4 different color combinations that target specific types of color blindness:
 - **Type 1 & 4**: Test for Deutan (green weakness)
@@ -146,27 +146,43 @@ The test uses 4 different color combinations that target specific types of color
 
 Based on which types you struggle with, it calculates the likelihood of each deficiency type and generates a diagnosis.
 
-## Project Structure
+### Mobile-Friendly Testing
+- **Number Pad Interface**: Tap numbers 0-9 instead of using keyboard
+- **Desktop Input**: Traditional text input with keyboard shortcuts
+- **Automatic Detection**: Interface adapts to screen size
+- **Progress Tracking**: Visual progress bar throughout the test
 
-```
-OculusAI/
-├── frontend/              # Next.js app
-│   ├── app/              # Pages (analyze, colorblindness, diseases, etc.)
-│   └── components/       # UI components and PDF generators
-├── CBTestImages/         # Ishihara test images
-├── flask_app.py          # Main API server
-├── app_streamlit.py      # Alternative UI for retina test
-├── train_ishihara_model.py  # Model training script
-└── *.keras              # Model files (not in repo)
-```
 
 ## Features
 
+### Image Validation
+- **Smart Upload Filtering**: Automatically detects and rejects non-retinal images
+- **Circular Fundus Detection**: Validates presence of characteristic retinal patterns
+- **Color Profile Analysis**: Ensures images match retinal scan characteristics
+- **Edge Brightness Check**: Verifies typical dark background of fundus photographs
+- **User-Friendly Errors**: Clear error messages guide users to upload correct image types
+
+### Sample Images
+- **8 Test Images**: Pre-loaded sample retinal images for model testing
+- **Collapsible Section**: Hidden by default with content warning for medical imagery
+- **One-Click Testing**: Instantly analyze samples without uploading
+- **Disease Variety**: Covers normal, cataract, diabetic retinopathy, and glaucoma cases
+
+### Mobile Optimization
+- **Responsive Design**: Full functionality on phones and tablets
+- **Touch-Friendly Input**: Number pad interface for color vision test on mobile
+- **Network Configuration**: Supports local network access for cross-device testing
+- **Mobile Navigation**: Slide-in drawer menu with all site sections
+- **Adaptive Layouts**: Components automatically adjust for screen size
+
+### User Interface
 - Upload retinal images or take the interactive color vision test
 - Real-time AI analysis (both models run in under a second)
 - Download professional PDF reports with medical information
 - Dark/light theme throughout the app
 - Works on desktop and mobile
+- Drag-and-drop image upload
+- Interactive test interface with progress tracking
 
 <!-- Add feature screenshots here -->
 

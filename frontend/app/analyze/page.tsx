@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Upload, Loader2, ArrowLeft, Download, Eye, Sparkles, AlertCircle, CheckCircle2, Shield } from 'lucide-react'
+import { Upload, Loader2, ArrowLeft, Download, Eye, Sparkles, AlertCircle, CheckCircle2, Shield, ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ResultsDisplay } from '@/components/results-display'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { MobileNav } from '@/components/mobile-nav'
 
 export default function AnalyzePage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -15,6 +16,7 @@ export default function AnalyzePage() {
   const [showPhoto, setShowPhoto] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [showSamples, setShowSamples] = useState(false)
 
   const validateFile = (file: File): string | null => {
     // Check file type
@@ -51,6 +53,7 @@ export default function AnalyzePage() {
 
   const analyzeImage = async (file: File) => {
     setIsLoading(true)
+    setAnalysisResult(null) // Clear previous results
     
     try {
       const formData = new FormData()
@@ -63,7 +66,25 @@ export default function AnalyzePage() {
       })
       
       if (!response.ok) {
-        throw new Error(`API error: ${response.statusText}`)
+        // Try to get error message from response
+        const errorData = await response.json().catch(() => null)
+        
+        let errorMessage = 'Unable to analyze this image. Please upload a clear retinal fundus photograph.'
+        
+        if (errorData?.error) {
+          errorMessage = errorData.error
+        }
+        
+        // Don't throw - set error state directly to avoid Next.js error overlay
+        setAnalysisResult({
+          error: errorMessage,
+          primaryDiagnosis: 'Invalid Image',
+          confidence: 0,
+          findings: [],
+          recommendation: 'Please upload a clear retinal fundus photograph taken with proper medical imaging equipment.'
+        })
+        setIsLoading(false)
+        return // Exit early
       }
       
       const data = await response.json()
@@ -89,13 +110,15 @@ export default function AnalyzePage() {
       
       setAnalysisResult(transformedResult)
     } catch (error) {
+      // Log error but don't throw to avoid Next.js error overlay
       console.error('Analysis error:', error)
+      
       setAnalysisResult({
-        error: error instanceof Error ? error.message : 'Failed to analyze image',
+        error: 'Unable to analyze image. Please try again with a different photo.',
         primaryDiagnosis: 'Error',
         confidence: 0,
         findings: [],
-        recommendation: 'Unable to analyze image. Please check that the Flask backend is running on http://localhost:5000'
+        recommendation: 'Please upload a clear retinal fundus photograph taken with proper medical imaging equipment.'
       })
     } finally {
       setIsLoading(false)
@@ -133,19 +156,37 @@ export default function AnalyzePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-b border-border/40 bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+      <nav className="border-b border-border/40 bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4 animate-fade-in-up">
+          <div className="flex items-center gap-2">
             <Link href="/">
-              <Button variant="ghost" size="icon" className="transition-smooth">
-                <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
-              </Button>
+              <span className="text-lg sm:text-xl font-bold cursor-pointer">OculusAI</span>
             </Link>
-            <h1 className="text-lg sm:text-2xl font-bold">Retinal Analysis</h1>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-3 sm:gap-6">
+            <Link href="/" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Home
+            </Link>
+            <Link href="/analyze" className="text-xs sm:text-sm text-foreground font-medium hover:text-foreground transition-smooth hidden md:inline">
+              Retinal Test
+            </Link>
+            <Link href="/colorblindness" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Colour Blindness Test
+            </Link>
+            <Link href="/diseases" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Diseases
+            </Link>
+            <Link href="/evaluation" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Model
+            </Link>
+            <Link href="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              About
+            </Link>
+            <ThemeToggle />
+            <MobileNav />
+          </div>
         </div>
-      </div>
+      </nav>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {!previewUrl ? (
@@ -213,6 +254,77 @@ export default function AnalyzePage() {
                 <Shield className="w-4 h-4 text-primary flex-shrink-0" />
                 <span>Secure & Private</span>
               </div>
+            </div>
+
+            {/* Sample Images Section */}
+            <div className="mt-12 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <Button
+                variant="outline"
+                onClick={() => setShowSamples(!showSamples)}
+                className="w-full flex items-center justify-between text-left p-4 h-auto hover:bg-muted/50 hover:border-border hover:text-foreground transition-colors"
+              >
+                <div>
+                  <h3 className="text-base sm:text-lg font-semibold mb-1 text-foreground">Try Sample Images</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-normal">
+                    Don&apos;t have a retinal image? Click to view sample images
+                  </p>
+                </div>
+                {showSamples ? (
+                  <ChevronUp className="w-5 h-5 flex-shrink-0 ml-2 text-foreground" />
+                ) : (
+                  <ChevronDown className="w-5 h-5 flex-shrink-0 ml-2 text-foreground" />
+                )}
+              </Button>
+
+              {showSamples && (
+                <div className="mt-4 space-y-4 animate-fade-in-up">
+                  <Card className="p-3 bg-amber-500/10 border-amber-500/20">
+                    <p className="text-xs text-amber-600 dark:text-amber-400 flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                      <span><strong>Content Warning:</strong> These images contain medical photographs of eye conditions that some viewers may find uncomfortable to view.</span>
+                    </p>
+                  </Card>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    {[
+                      { name: '100_left.jpeg', label: 'Sample 1' },
+                      { name: 'download (3).jpeg', label: 'Sample 2' },
+                      { name: 'download (4).jpeg', label: 'Sample 3' },
+                      { name: 'download (5).jpeg', label: 'Sample 4' },
+                      { name: 'download (6).jpeg', label: 'Sample 5' },
+                      { name: 'download (7).jpeg', label: 'Sample 6' },
+                      { name: '_0_4015166.jpg', label: 'Sample 7' },
+                      { name: '_1_5346540.jpg', label: 'Sample 8' },
+                    ].map((sample) => (
+                      <Card
+                        key={sample.name}
+                        className="cursor-pointer overflow-hidden transition-all hover:scale-105 hover:shadow-lg border-2 hover:border-primary/40"
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`/samples/${sample.name}`)
+                            const blob = await response.blob()
+                            const file = new File([blob], sample.name, { type: blob.type })
+                            handleFile(file)
+                          } catch (error) {
+                            console.error('Error loading sample:', error)
+                          }
+                        }}
+                      >
+                        <div className="aspect-square relative bg-black/5">
+                          <img
+                            src={`/samples/${sample.name}`}
+                            alt={sample.label}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="p-2 text-center">
+                          <p className="text-xs font-medium text-foreground">{sample.label}</p>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ) : (

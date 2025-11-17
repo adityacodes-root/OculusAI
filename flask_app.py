@@ -67,6 +67,86 @@ def load_model():
             print(f"❌ Error loading Ishihara model: {str(e)}")
             app.ishihara_model = None
 
+def is_retinal_image(img_array):
+    """
+    Validate if the uploaded image is likely a retinal scan.
+    Returns (is_valid, reason) tuple.
+    """
+    try:
+        # Convert to numpy array for analysis
+        img = img_array[0]  # Remove batch dimension
+        
+        # 1. Check if image is too uniform (likely a solid color or simple image)
+        std_dev = np.std(img)
+        if std_dev < 8:  # Relaxed from 10
+            return False, "Image appears to be too uniform. Please upload a retinal scan image."
+        
+        # 2. Check for circular/elliptical shape typical of retinal images
+        # Convert to grayscale
+        gray = np.mean(img, axis=-1).astype(np.uint8)
+        h, w = gray.shape
+        
+        # Create a circular mask representing where the retinal fundus should be
+        center_x, center_y = w // 2, h // 2
+        Y, X = np.ogrid[:h, :w]
+        
+        # Check multiple radii to find circular pattern - more flexible
+        found_circle = False
+        for radius_factor in [0.3, 0.35, 0.4, 0.45, 0.5]:  # Check more sizes
+            radius = int(min(h, w) * radius_factor)
+            circle_mask = ((X - center_x)**2 + (Y - center_y)**2) <= radius**2
+            
+            # Calculate brightness inside and outside the circle
+            inside_brightness = np.mean(gray[circle_mask])
+            outside_brightness = np.mean(gray[~circle_mask])
+            
+            # Retinal images have brighter center (inside circle) and darker edges (outside)
+            brightness_ratio = inside_brightness / (outside_brightness + 1)  # +1 to avoid division by zero
+            
+            # Relaxed threshold - diabetic retinopathy can have darker centers
+            if brightness_ratio > 1.15:  # Relaxed from 1.3
+                found_circle = True
+                break
+        
+        if not found_circle:
+            return False, "No circular retinal fundus pattern detected. Please upload a retinal scan image."
+        
+        # 3. Check if edges are dark (typical black background of retinal images)
+        edge_pixels = np.concatenate([
+            gray[0, :].flatten(),      # Top edge
+            gray[-1, :].flatten(),     # Bottom edge
+            gray[:, 0].flatten(),      # Left edge
+            gray[:, -1].flatten()      # Right edge
+        ])
+        edge_mean = np.mean(edge_pixels)
+        
+        if edge_mean > 100:  # Relaxed from 80
+            return False, "Image edges are too bright. Retinal scans have dark backgrounds."
+        
+        # 4. Check color distribution - retinal images have specific red/orange tones
+        r_channel = img[:, :, 0]
+        g_channel = img[:, :, 1]
+        b_channel = img[:, :, 2]
+        
+        # Only check color in the center circular region
+        center_mask = ((X - center_x)**2 + (Y - center_y)**2) <= (min(h, w) * 0.4)**2
+        
+        mean_r = np.mean(r_channel[center_mask])
+        mean_g = np.mean(g_channel[center_mask])
+        mean_b = np.mean(b_channel[center_mask])
+        
+        # More lenient color check - diabetic retinopathy can have varied colors
+        # Just ensure it's not predominantly blue (which would indicate non-medical image)
+        if mean_b > mean_r or mean_r < 50:  # Relaxed conditions
+            return False, "Image color profile doesn't match retinal scans. Please upload a fundus photograph."
+        
+        return True, None
+        
+    except Exception as e:
+        # If validation fails, reject the image to be safe
+        print(f"Validation error: {str(e)}")
+        return False, "Unable to validate image format. Please ensure you upload a clear retinal scan."
+
 @app.route('/api/predict', methods=['POST'])
 def predict():
     try:
@@ -90,12 +170,34 @@ def predict():
         img_array = tf.keras.utils.img_to_array(img_resized)
         img_array = np.expand_dims(img_array, axis=0)
         
+        # Validate if image is a retinal scan
+        is_valid, error_message = is_retinal_image(img_array)
+        if not is_valid:
+            return jsonify({
+                'error': error_message,
+                'suggestion': 'Please upload a clear retinal fundus photograph for analysis.'
+            }), 400
+        
         # Make prediction
         predictions = app.model.predict(img_array, verbose=0)
         probabilities = tf.nn.softmax(predictions[0]).numpy()
         
         predicted_class = class_names[int(np.argmax(probabilities))]
         confidence = float(np.max(probabilities)) * 100
+        
+        # Additional confidence check - if all predictions are too similar, image might not be retinal
+        max_prob = np.max(probabilities)
+        second_max_prob = np.partition(probabilities, -2)[-2]
+        
+        if max_prob < 0.4 or (max_prob - second_max_prob) < 0.1:
+            return jsonify({
+                'error': 'Unable to confidently classify this image. It may not be a retinal scan.',
+                'suggestion': 'Please ensure you upload a clear retinal fundus photograph.',
+                'all_predictions': {
+                    class_names[i]: round(float(probabilities[i]) * 100, 2)
+                    for i in range(len(class_names))
+                }
+            }), 400
         
         # Prepare response with all confidence scores
         result = {
@@ -479,4 +581,5 @@ def generate_diagnosis(type_probabilities):
     return diagnosis
 
 if __name__ == '__main__':
-    app.run(debug=False, port=5000, use_reloader=False)
+    # host='0.0.0.0' allows access from other devices on the network
+    app.run(debug=False, host='0.0.0.0', port=5000, use_reloader=False)

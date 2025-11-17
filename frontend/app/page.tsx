@@ -3,50 +3,59 @@ import { ArrowRight, Brain, Zap, Shield, BarChart3, Eye, Palette } from 'lucide-
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/theme-toggle'
+import DarkVeil from '@/components/DarkVeil'
+import CountUp from '@/components/CountUp'
+import { MobileNav } from '@/components/mobile-nav'
 
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur-sm">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/20 bg-background/60 backdrop-blur-xl shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-lg sm:text-xl font-bold">OculusAI</span>
           </div>
           <div className="flex items-center gap-3 sm:gap-6">
-            <Link href="/analyze" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth">
-              Retina Test
+            <Link href="/" className="text-xs sm:text-sm text-foreground font-medium hover:text-foreground transition-smooth hidden md:inline">
+              Home
             </Link>
-            <Link href="/colorblindness" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden sm:inline">
-              Color Test
+            <Link href="/analyze" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Retinal Test
             </Link>
-            <Link href="/diseases" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden sm:inline">
+            <Link href="/colorblindness" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Colour Blindness Test
+            </Link>
+            <Link href="/diseases" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
               Diseases
             </Link>
-            <Link href="/evaluation" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden sm:inline">
+            <Link href="/evaluation" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
               Model
             </Link>
             <Link href="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
               About
             </Link>
             <ThemeToggle />
-            <Link href="/analyze">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground transition-smooth text-xs sm:text-sm px-3 sm:px-4">
-                Get Started
-              </Button>
-            </Link>
+            <MobileNav />
           </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 opacity-30">
-          <div className="absolute top-20 right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-primary/20 rounded-full blur-3xl animate-fade-in-up" style={{ animationDelay: '0.1s' }}></div>
-          <div className="absolute bottom-0 left-1/3 w-64 sm:w-96 h-64 sm:h-96 bg-accent/20 rounded-full blur-3xl animate-fade-in-up" style={{ animationDelay: '0.2s' }}></div>
+      <section className="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 relative overflow-hidden flex items-center" style={{ minHeight: '100vh' }}>
+        <div className="absolute inset-0 z-0 opacity-50 dark:opacity-50 light:opacity-0 hidden dark:block" style={{ height: '100%', width: '100%' }}>
+          <DarkVeil 
+            hueShift={0}
+            noiseIntensity={0.03}
+            scanlineIntensity={0.08}
+            speed={0.5}
+            scanlineFrequency={1}
+            warpAmount={0.3}
+            resolutionScale={1}
+          />
         </div>
         
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center relative z-10 w-full" style={{ position: 'relative' }}>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-balance mb-4 sm:mb-6 leading-tight animate-fade-in-up">
             See Better, <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">Diagnose Faster</span>
           </h1>
@@ -56,14 +65,14 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <Link href="/analyze">
+            <Link href="/colorblindness">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 transition-smooth w-full sm:w-auto">
-                Start Analysis <ArrowRight className="w-4 h-4" />
+                <Palette className="w-4 h-4" /> Colour Blindness Test
               </Button>
             </Link>
-            <Link href="/about">
-              <Button size="lg" variant="outline" className="transition-smooth w-full sm:w-auto">
-                Learn More
+            <Link href="/analyze">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 transition-smooth w-full sm:w-auto">
+                <Eye className="w-4 h-4" /> Retinal Test
               </Button>
             </Link>
           </div>
@@ -76,10 +85,10 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-center mb-16 animate-fade-in-up">Why Choose OculusAI</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: Eye, title: 'Retina Analysis', desc: 'Disease detection', stat: '89%', link: '/analyze' },
-              { icon: Palette, title: 'Color Vision', desc: 'Ishihara digit test', stat: '99.5%', link: '/colorblindness' },
-              { icon: Brain, title: 'Dual AI Models', desc: 'CNN architectures', stat: '2x', link: '/evaluation' },
-              { icon: Shield, title: 'Privacy First', desc: 'Secure analysis', stat: '100%', link: '/about' }
+              { icon: Eye, title: 'Retina Analysis', desc: 'Disease detection', stat: 89, suffix: '%', link: '/analyze' },
+              { icon: Palette, title: 'Colour Vision', desc: 'Ishihara digit test', stat: 99.5, suffix: '%', link: '/colorblindness' },
+              { icon: Brain, title: 'Dual AI Models', desc: 'CNN architectures', stat: 2, suffix: 'x', link: '/evaluation' },
+              { icon: Shield, title: 'Privacy First', desc: 'Secure analysis', stat: 100, suffix: '%', link: '/about' }
             ].map((item, i) => {
               const Icon = item.icon
               return (
@@ -96,7 +105,7 @@ export default function Home() {
                         <Icon className="w-6 h-6 text-primary" />
                       </div>
                       <div className="text-3xl font-bold text-primary mb-2">
-                        {item.stat}
+                        <CountUp to={item.stat} duration={2} delay={0.1 * i} />{item.suffix}
                       </div>
                       <h3 className="font-semibold mb-2 text-foreground">{item.title}</h3>
                       <p className="text-sm text-muted-foreground">{item.desc}</p>

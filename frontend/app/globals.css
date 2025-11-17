@@ -5,7 +5,7 @@
 
 :root {
   /* Improved color palette with better contrast for readability */
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   --background: oklch(0.99 0.001 280);
   --foreground: oklch(0.09 0.004 280);
   --card: oklch(1 0 0);
@@ -34,7 +34,7 @@
 }
 
 .dark {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   --background: oklch(0.08 0.002 280);
   --foreground: oklch(0.96 0.001 280);
   --card: oklch(0.13 0.003 280);
@@ -103,7 +103,7 @@
     @apply border-border outline-ring/50;
     transition-property: background-color, border-color, color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
+    transition-duration: 500ms;
   }
   body {
     @apply bg-background text-foreground;

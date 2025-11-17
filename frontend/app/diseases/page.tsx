@@ -5,6 +5,7 @@ import { ArrowLeft, Eye, AlertCircle, Droplet, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { MobileNav } from '@/components/mobile-nav'
 
 export default function DiseasesPage() {
   const diseases = [
@@ -182,19 +183,37 @@ export default function DiseasesPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+      <nav className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4 animate-fade-in-up">
+          <div className="flex items-center gap-2">
             <Link href="/">
-              <Button variant="ghost" size="icon" className="transition-smooth">
-                <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
-              </Button>
+              <span className="text-lg sm:text-xl font-bold cursor-pointer">OculusAI</span>
             </Link>
-            <h1 className="text-lg sm:text-2xl font-bold">Eye Diseases</h1>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-3 sm:gap-6">
+            <Link href="/" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Home
+            </Link>
+            <Link href="/analyze" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Retinal Test
+            </Link>
+            <Link href="/colorblindness" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Colour Blindness Test
+            </Link>
+            <Link href="/diseases" className="text-xs sm:text-sm text-foreground font-medium hover:text-foreground transition-smooth hidden md:inline">
+              Diseases
+            </Link>
+            <Link href="/evaluation" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Model
+            </Link>
+            <Link href="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              About
+            </Link>
+            <ThemeToggle />
+            <MobileNav />
+          </div>
         </div>
-      </div>
+      </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Introduction */}

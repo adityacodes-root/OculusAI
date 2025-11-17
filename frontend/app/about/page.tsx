@@ -3,24 +3,43 @@ import { ArrowLeft, Check, Brain, Code, Database, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { MobileNav } from '@/components/mobile-nav'
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+      <nav className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2">
             <Link href="/">
-              <Button variant="ghost" size="icon" className="transition-smooth">
-                <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
-              </Button>
+              <span className="text-lg sm:text-xl font-bold cursor-pointer">OculusAI</span>
             </Link>
-            <h1 className="text-lg sm:text-2xl font-bold">About OculusAI</h1>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-3 sm:gap-6">
+            <Link href="/" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Home
+            </Link>
+            <Link href="/analyze" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Retinal Test
+            </Link>
+            <Link href="/colorblindness" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Colour Blindness Test
+            </Link>
+            <Link href="/diseases" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Diseases
+            </Link>
+            <Link href="/evaluation" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-smooth hidden md:inline">
+              Model
+            </Link>
+            <Link href="/about" className="text-xs sm:text-sm text-foreground font-medium hover:text-foreground transition-smooth hidden md:inline">
+              About
+            </Link>
+            <ThemeToggle />
+            <MobileNav />
+          </div>
         </div>
-      </div>
+      </nav>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <section className="mb-16 animate-fade-in-up">
@@ -32,7 +51,7 @@ export default function AboutPage() {
           </p>
           <p className="text-lg text-muted-foreground leading-relaxed">
             This project demonstrates how convolutional neural networks can be trained to assist in 
-            identifying common eye conditions and color blindness patterns, providing a comprehensive 
+            identifying common eye conditions and colour blindness patterns, providing a comprehensive 
             proof-of-concept for AI in ophthalmology and vision science.
           </p>
         </section>
@@ -130,9 +149,9 @@ export default function AboutPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
                   'Deuteranomaly - Reduced green sensitivity (mild)',
-                  'Deuteranopia - Complete green color blindness (moderate to strong)',
+                  'Deuteranopia - Complete green colour blindness (moderate to strong)',
                   'Protanomaly - Reduced red sensitivity (mild)',
-                  'Protanopia - Complete red color blindness (moderate to strong)'
+                  'Protanopia - Complete red colour blindness (moderate to strong)'
                 ].map((condition, i) => (
                   <div key={i} className="flex gap-3 items-center p-4 rounded-lg border border-border bg-card animate-fade-in-up" style={{ animationDelay: `${i * 0.1 + 0.4}s` }}>
                     <Check className="w-5 h-5 text-primary flex-shrink-0" />

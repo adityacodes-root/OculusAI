@@ -60,3 +60,5 @@ yarn-error.log*
 # Misc
 .cache/
 .temp/
+.env
+train_ishihira_model.py
