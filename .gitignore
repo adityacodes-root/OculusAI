@@ -30,8 +30,8 @@ env/
 *.pb
 *.ckpt
 
-# Keep the trained model
-!eye_disease_model.keras
+# Trained models (too large for GitHub)
+*.keras
 
 # Next.js
 frontend/.next/
