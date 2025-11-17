@@ -155,7 +155,13 @@ export default function AnalyzePage() {
           <div className="max-w-2xl mx-auto">
             <div className="mb-6 sm:mb-8 animate-fade-in-up">
               <h2 className="text-2xl sm:text-3xl font-bold mb-2">Upload Retinal Image</h2>
-              <p className="text-sm sm:text-base text-muted-foreground">Drag and drop a fundus image or click to browse</p>
+              <p className="text-sm sm:text-base text-muted-foreground mb-3">
+                Drag and drop a fundus image or click to browse
+              </p>
+              <p className="text-xs text-muted-foreground">
+                <strong className="text-foreground">Note:</strong> For colour vision testing, 
+                visit the <Link href="/colorblindness" className="text-primary hover:underline">Colour Blindness Test</Link> page.
+              </p>
             </div>
 
             <Card

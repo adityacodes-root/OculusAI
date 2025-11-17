@@ -200,9 +200,14 @@ export default function DiseasesPage() {
         {/* Introduction */}
         <div className="mb-12 animate-fade-in-up">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Detectable Eye Conditions</h2>
-          <p className="text-muted-foreground text-lg max-w-3xl">
-            Learn about the four categories of eye conditions that OculusAI can detect from retinal fundus images. 
+          <p className="text-muted-foreground text-lg max-w-3xl mb-4">
+            Learn about the four categories of eye diseases that OculusAI can detect from retinal fundus images. 
             Understanding these conditions helps in early detection and timely intervention.
+          </p>
+          <p className="text-muted-foreground text-base max-w-3xl">
+            <strong className="text-foreground">Note:</strong> OculusAI also provides colour vision testing 
+            using AI-powered Ishihara-style tests to detect Protan and Deutan type colour blindness. 
+            Visit the <Link href="/colorblindness" className="text-primary hover:underline">Colour Blindness Test</Link> page to learn more.
           </p>
         </div>
 
