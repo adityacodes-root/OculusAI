@@ -459,7 +459,7 @@ export function PDFReportGenerator({ result, imageUrl }: PDFReportGeneratorProps
       
       // Mini confidence bar
       const miniBarWidth = 30
-      const miniBarHeight = 2.5
+      const miniBarHeight = 2.5 
       yPosition += 4
       pdf.setFillColor(220, 220, 220)
       pdf.rect(margin + 5, yPosition, miniBarWidth, miniBarHeight, 'F')
