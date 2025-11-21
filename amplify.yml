@@ -16,3 +16,8 @@ frontend:
     paths:
       - frontend/node_modules/**/*
       - frontend/.next/cache/**/*
+backend:
+  phases:
+    build:
+      commands:
+        - echo "Backend API should be deployed separately to EC2/Lambda"

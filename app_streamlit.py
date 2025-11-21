@@ -3,6 +3,7 @@ import tensorflow as tf
 from PIL import Image
 import numpy as np
 import io
+import os
 
 # --- Page Configuration --- #
 st.set_page_config(
@@ -71,7 +72,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- Configuration --- #
-MODEL_PATH = r'C:\Users\adity\Desktop\VisionXAI\eye_disease_model.keras'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, 'eye_disease_model.keras')
 IMAGE_SIZE = (256, 256)
 class_names = ['cataract', 'diabetic_retinopathy', 'glaucoma', 'normal']
 
