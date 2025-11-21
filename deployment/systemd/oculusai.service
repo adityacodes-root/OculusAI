@@ -1,0 +1,17 @@
+[Unit]
+Description=OculusAI Flask Backend
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/OculusAI
+Environment="PATH=/home/ubuntu/OculusAI/.venv/bin"
+ExecStart=/home/ubuntu/OculusAI/.venv/bin/python flask_app.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

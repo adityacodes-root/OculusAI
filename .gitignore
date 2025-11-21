@@ -62,3 +62,24 @@ yarn-error.log*
 .temp/
 .env
 train_ishihira_model.py
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Workspace files
+*.code-workspace
+
+# AWS deployment keys 
+*.pem
+*.ppk
+
+# AWS deployment documentation (keep only in local)
+AWS_DEPLOYMENT.md
+deployment/BEGINNER_GUIDE.md
+deployment/EC2_QUICKSTART.md
