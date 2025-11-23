@@ -106,6 +106,7 @@ export default function ColorBlindnessTest() {
     }
 
     setImageLoading(true)
+    setLoadingMessage("Loading next image...")
     setResponses([...responses, { filename: currentImage.filename, user_answer: digit }])
     setUserInput("")
     setError(null)
