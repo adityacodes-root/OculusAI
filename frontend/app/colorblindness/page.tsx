@@ -63,6 +63,7 @@ export default function ColorBlindnessTest() {
   const [responses, setResponses] = useState<Response[]>([])
   const [userInput, setUserInput] = useState("")
   const [loading, setLoading] = useState(false)
+  const [loadingMessage, setLoadingMessage] = useState("")
   const [imageLoading, setImageLoading] = useState(false)
   const [testStarted, setTestStarted] = useState(false)
   const [testCompleted, setTestCompleted] = useState(false)
@@ -74,6 +75,8 @@ export default function ColorBlindnessTest() {
 
   const startTest = async () => {
     setLoading(true)
+    setLoadingMessage("Loading test...")
+    setImageLoading(true)
     setError(null)
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
@@ -87,6 +90,7 @@ export default function ColorBlindnessTest() {
       setUserInput("")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to start test")
+      setImageLoading(false)
     } finally {
       setLoading(false)
     }
@@ -115,6 +119,7 @@ export default function ColorBlindnessTest() {
 
   const evaluateTest = async (finalResponses: Response[]) => {
     setLoading(true)
+    setLoadingMessage("Analyzing results...")
     setError(null)
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
@@ -212,14 +217,6 @@ export default function ColorBlindnessTest() {
       <main className="container mx-auto px-4 py-6 sm:py-12 animate-fade-in-up">
         <div className="max-w-4xl mx-auto">
 
-          {error && (
-            <Alert variant="destructive" className="mb-6">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
           {/* Welcome Screen */}
           {!testStarted && !testCompleted && (
             <Card className="mb-8">
@@ -286,7 +283,7 @@ export default function ColorBlindnessTest() {
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80 dark:bg-gray-800/80 rounded-lg z-10">
                       <div className="flex flex-col items-center gap-2">
                         <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary"></div>
-                        <p className="text-xs sm:text-sm text-muted-foreground">Loading next image...</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">{loadingMessage || "Loading next image..."}</p>
                       </div>
                     </div>
                   )}
@@ -300,6 +297,13 @@ export default function ColorBlindnessTest() {
 
                 {/* Input Section */}
                 <div className="space-y-4">
+                  {error && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  )}
+                  
                   <div>
                     <label htmlFor="digit-input" className="block text-sm font-medium mb-2">
                       What digit do you see? (0-9)
