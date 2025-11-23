@@ -55,6 +55,13 @@ interface TestResult {
   total_questions: number
   type_analysis: Record<number, TypeAnalysis>
   diagnosis: Diagnosis
+  detailed_results?: Array<{
+    filename: string
+    correct_digit: number
+    user_answer: number
+    is_correct: boolean
+    color_type: number
+  }>
 }
 
 export default function ColorBlindnessTest() {
@@ -118,6 +125,185 @@ export default function ColorBlindnessTest() {
     }
   }
 
+  const recalculateDiagnosis = (backendResult: TestResult): TestResult => {
+    // CRITICAL FIX: Backend mislabels theme_4 images as type_3
+    // We need to remap them to type_4 for accurate diagnosis
+    
+    // First, let's rebuild the type_analysis by examining detailed_results
+    const newTypeAnalysis: Record<number, TypeAnalysis> = {
+      1: { total: 0, mistakes: 0, error_percentage: 0, normal_percentage: 100 },
+      2: { total: 0, mistakes: 0, error_percentage: 0, normal_percentage: 100 },
+      3: { total: 0, mistakes: 0, error_percentage: 0, normal_percentage: 100 },
+      4: { total: 0, mistakes: 0, error_percentage: 0, normal_percentage: 100 }
+    }
+    
+    // Process each detailed result and fix the type
+    if (backendResult.detailed_results) {
+      backendResult.detailed_results.forEach((result: any) => {
+        // Determine the correct type
+        let correctType = result.color_type
+        
+        // If filename contains theme_4, it's actually type 4 (not type 3)
+        if (result.filename.includes('theme_4')) {
+          correctType = 4
+        }
+        
+        // Update statistics for the correct type
+        newTypeAnalysis[correctType].total++
+        if (!result.is_correct) {
+          newTypeAnalysis[correctType].mistakes++
+        }
+      })
+      
+      // Calculate percentages for each type
+      Object.keys(newTypeAnalysis).forEach(typeKey => {
+        const type = parseInt(typeKey)
+        const analysis = newTypeAnalysis[type]
+        if (analysis.total > 0) {
+          analysis.error_percentage = Math.round((analysis.mistakes / analysis.total) * 1000) / 10
+          analysis.normal_percentage = Math.round((1 - analysis.mistakes / analysis.total) * 1000) / 10
+        }
+      })
+    }
+    
+    // Now recalculate diagnosis with corrected type analysis
+    const type_analysis = newTypeAnalysis
+    
+    // Get error rates for each type
+    const type1_error = type_analysis[1]?.error_percentage || 0
+    const type2_error = type_analysis[2]?.error_percentage || 0
+    const type3_error = type_analysis[3]?.error_percentage || 0
+    const type4_error = type_analysis[4]?.error_percentage || 0
+    
+    // Calculate Deutan likelihood (Type 1 + Type 4) - only include types with tests
+    const deutanIndicators = []
+    if (type_analysis[1]?.total > 0) deutanIndicators.push(type1_error)
+    if (type_analysis[4]?.total > 0) deutanIndicators.push(type4_error)
+    const deutan_likelihood = deutanIndicators.length > 0 
+      ? deutanIndicators.reduce((a, b) => a + b, 0) / deutanIndicators.length 
+      : 0
+    
+    // Calculate Protan likelihood (Type 2 + Type 3) - only include types with tests
+    const protanIndicators = []
+    if (type_analysis[2]?.total > 0) protanIndicators.push(type2_error)
+    if (type_analysis[3]?.total > 0) protanIndicators.push(type3_error)
+    const protan_likelihood = protanIndicators.length > 0
+      ? protanIndicators.reduce((a, b) => a + b, 0) / protanIndicators.length
+      : 0
+    
+    // Calculate overall error rate
+    const total_errors = Object.values(type_analysis).reduce((sum, t) => sum + t.mistakes, 0)
+    const total_tests = Object.values(type_analysis).reduce((sum, t) => sum + t.total, 0)
+    const overall_error = total_tests > 0 ? (total_errors / total_tests * 100) : 0
+    
+    // Thresholds
+    const THRESHOLD_LOW = 10
+    const THRESHOLD_MODERATE = 30
+    const THRESHOLD_HIGH = 50
+    
+    let diagnosis = { ...backendResult.diagnosis }
+    diagnosis.deutan_likelihood = Math.round(deutan_likelihood * 10) / 10
+    diagnosis.protan_likelihood = Math.round(protan_likelihood * 10) / 10
+    
+    // Improved diagnosis logic
+    if (overall_error < THRESHOLD_LOW) {
+      diagnosis.status = 'normal'
+      diagnosis.severity = 'none'
+      diagnosis.type = null
+      diagnosis.summary = 'Normal colour vision detected. No significant colour vision deficiency.'
+      diagnosis.recommendation = 'No further action required. Your colour vision appears normal.'
+      diagnosis.details = ['All colour types were perceived correctly with minimal errors.']
+    }
+    else if (deutan_likelihood > protan_likelihood && deutan_likelihood >= THRESHOLD_LOW) {
+      // Deutan pattern (green-weak/green-blind)
+      if (deutan_likelihood >= THRESHOLD_HIGH) {
+        diagnosis.status = 'colour_blind'
+        diagnosis.type = 'Deuteranopia'
+        diagnosis.severity = 'strong'
+        diagnosis.confidence = 'high'
+        diagnosis.summary = `Strong indication of Deuteranopia (green-blindness). Error rate: ${deutan_likelihood.toFixed(1)}%`
+        diagnosis.recommendation = 'Please consult an eye care professional for a comprehensive colour vision examination.'
+      } else if (deutan_likelihood >= THRESHOLD_MODERATE) {
+        diagnosis.status = 'colour_weak'
+        diagnosis.type = 'Deuteranomaly'
+        diagnosis.severity = 'moderate'
+        diagnosis.confidence = 'moderate'
+        diagnosis.summary = `Moderate signs of Deuteranomaly (green-weakness). Error rate: ${deutan_likelihood.toFixed(1)}%`
+        diagnosis.recommendation = 'Consider seeing an eye care professional for further evaluation.'
+      } else {
+        diagnosis.status = 'possible_weakness'
+        diagnosis.type = 'Deuteranomaly'
+        diagnosis.severity = 'mild'
+        diagnosis.confidence = 'low'
+        diagnosis.summary = `Mild signs of green colour weakness. Error rate: ${deutan_likelihood.toFixed(1)}%`
+        diagnosis.recommendation = 'Monitor your colour vision. If symptoms persist, consult an eye care professional.'
+      }
+      diagnosis.details = [
+        `Type 1 errors (green vs orange): ${type1_error.toFixed(1)}%`,
+        `Type 4 errors (green vs yellow): ${type4_error.toFixed(1)}%`
+      ]
+    }
+    else if (protan_likelihood > deutan_likelihood && protan_likelihood >= THRESHOLD_LOW) {
+      // Protan pattern (red-weak/red-blind)
+      if (protan_likelihood >= THRESHOLD_HIGH) {
+        diagnosis.status = 'colour_blind'
+        diagnosis.type = 'Protanopia'
+        diagnosis.severity = 'strong'
+        diagnosis.confidence = 'high'
+        diagnosis.summary = `Strong indication of Protanopia (red-blindness). Error rate: ${protan_likelihood.toFixed(1)}%`
+        diagnosis.recommendation = 'Please consult an eye care professional for a comprehensive colour vision examination.'
+      } else if (protan_likelihood >= THRESHOLD_MODERATE) {
+        diagnosis.status = 'colour_weak'
+        diagnosis.type = 'Protanomaly'
+        diagnosis.severity = 'moderate'
+        diagnosis.confidence = 'moderate'
+        diagnosis.summary = `Moderate signs of Protanomaly (red-weakness). Error rate: ${protan_likelihood.toFixed(1)}%`
+        diagnosis.recommendation = 'Consider seeing an eye care professional for further evaluation.'
+      } else {
+        diagnosis.status = 'possible_weakness'
+        diagnosis.type = 'Protanomaly'
+        diagnosis.severity = 'mild'
+        diagnosis.confidence = 'low'
+        diagnosis.summary = `Mild signs of red colour weakness. Error rate: ${protan_likelihood.toFixed(1)}%`
+        diagnosis.recommendation = 'Monitor your colour vision. If symptoms persist, consult an eye care professional.'
+      }
+      diagnosis.details = [
+        `Type 2 errors (red vs green): ${type2_error.toFixed(1)}%`,
+        `Type 3 errors (red vs gray): ${type3_error.toFixed(1)}%`
+      ]
+    }
+    else if (deutan_likelihood === protan_likelihood && deutan_likelihood >= THRESHOLD_MODERATE) {
+      // Equal likelihoods with significant errors
+      diagnosis.status = 'inconclusive'
+      diagnosis.severity = 'varied'
+      diagnosis.confidence = 'low'
+      diagnosis.summary = `Equal error rates detected (Deutan: ${deutan_likelihood.toFixed(1)}%, Protan: ${protan_likelihood.toFixed(1)}%). Results are inconclusive.`
+      diagnosis.recommendation = 'This test shows mixed results. Please consult an eye care professional for a thorough examination.'
+      diagnosis.details = [
+        `Type 1 errors: ${type1_error.toFixed(1)}%`,
+        `Type 2 errors: ${type2_error.toFixed(1)}%`,
+        `Type 3 errors: ${type3_error.toFixed(1)}%`,
+        `Type 4 errors: ${type4_error.toFixed(1)}%`
+      ]
+    }
+    else {
+      // Low errors or no clear pattern
+      diagnosis.status = 'normal'
+      diagnosis.severity = 'none'
+      diagnosis.type = null
+      diagnosis.summary = 'Normal colour vision with minor inconsistencies.'
+      diagnosis.recommendation = 'Your colour vision appears mostly normal. Retest if concerned.'
+      diagnosis.details = ['Errors are minimal and do not indicate a specific deficiency pattern.']
+    }
+    
+    // Return result with corrected type_analysis and diagnosis
+    return { 
+      ...backendResult, 
+      type_analysis: newTypeAnalysis,
+      diagnosis 
+    }
+  }
+
   const evaluateTest = async (finalResponses: Response[]) => {
     setLoading(true)
     setLoadingMessage("Analyzing results...")
@@ -131,7 +317,10 @@ export default function ColorBlindnessTest() {
       })
       if (!response.ok) throw new Error("Failed to evaluate test")
       const data = await response.json()
-      setResult(data)
+      
+      // Recalculate diagnosis with improved logic
+      const improvedResult = recalculateDiagnosis(data)
+      setResult(improvedResult)
       setTestCompleted(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to evaluate test")
