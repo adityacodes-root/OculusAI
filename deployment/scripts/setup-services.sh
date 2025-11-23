@@ -7,8 +7,12 @@ set -e
 
 echo "Setting up systemd service..."
 
-# Copy systemd service file
-sudo cp ~/OculusAI/deployment/systemd/oculusai.service /etc/systemd/system/
+# Copy systemd service file (handle both root and ubuntu user)
+if [ -d "/home/ubuntu/OculusAI" ]; then
+    sudo cp /home/ubuntu/OculusAI/deployment/systemd/oculusai.service /etc/systemd/system/
+else
+    sudo cp ~/OculusAI/deployment/systemd/oculusai.service /etc/systemd/system/
+fi
 
 # Reload systemd
 sudo systemctl daemon-reload
@@ -25,7 +29,11 @@ echo ""
 echo "Setting up Nginx..."
 
 # Copy Nginx configuration
-sudo cp ~/OculusAI/deployment/nginx/oculusai.conf /etc/nginx/sites-available/oculusai
+if [ -d "/home/ubuntu/OculusAI" ]; then
+    sudo cp /home/ubuntu/OculusAI/deployment/nginx/oculusai.conf /etc/nginx/sites-available/oculusai
+else
+    sudo cp ~/OculusAI/deployment/nginx/oculusai.conf /etc/nginx/sites-available/oculusai
+fi
 
 # Get EC2 public IP
 PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
