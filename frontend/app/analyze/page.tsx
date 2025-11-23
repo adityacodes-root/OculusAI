@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Upload, Loader2, ArrowLeft, Download, Eye, Sparkles, AlertCircle, CheckCircle2, Shield, ChevronDown, ChevronUp } from 'lucide-react'
+import { Upload, Loader2, ArrowLeft, Download, Eye, Sparkles, AlertCircle, CheckCircle2, Shield, ChevronDown, ChevronUp, ImageIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ResultsDisplay } from '@/components/results-display'
@@ -261,18 +261,26 @@ export default function AnalyzePage() {
               <Button
                 variant="outline"
                 onClick={() => setShowSamples(!showSamples)}
-                className="w-full flex items-center justify-between text-left p-4 h-auto hover:bg-muted/50 hover:border-border hover:text-foreground transition-colors"
+                className="w-full flex items-center justify-between text-left p-4 sm:p-6 h-auto border-2 border-foreground/20 hover:border-foreground hover:bg-primary/5 hover:text-foreground transition-all duration-200 shadow-md hover:shadow-lg"
               >
-                <div>
-                  <h3 className="text-base sm:text-lg font-semibold mb-1 text-foreground">Try Sample Images</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground font-normal">
-                    Don&apos;t have a retinal image? Click to view sample images
-                  </p>
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="p-2 sm:p-3 rounded-full bg-primary/10 flex-shrink-0">
+                    <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm sm:text-base md:text-lg font-bold mb-0.5 sm:mb-1 text-foreground truncate">🔬 Try Sample Images</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground font-normal hidden sm:block">
+                      Don&apos;t have a retinal image? Click here to explore pre-loaded samples
+                    </p>
+                    <p className="text-xs text-muted-foreground font-normal sm:hidden">
+                      Explore pre-loaded samples
+                    </p>
+                  </div>
                 </div>
                 {showSamples ? (
-                  <ChevronUp className="w-5 h-5 flex-shrink-0 ml-2 text-foreground" />
+                  <ChevronUp className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 ml-2 text-primary" />
                 ) : (
-                  <ChevronDown className="w-5 h-5 flex-shrink-0 ml-2 text-foreground" />
+                  <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 ml-2 text-primary animate-bounce" />
                 )}
               </Button>
 

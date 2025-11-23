@@ -141,6 +141,55 @@ const deficiencyInfo: Record<string, {
       'Assistive technology and accessibility tools',
       'Support groups and online communities'
     ]
+  },
+  'Red-Green': {
+    fullName: 'Red-Green Colorblindness (Combined Protan-Deutan Deficiency)',
+    overview: 'Red-Green colorblindness is a combined color vision deficiency affecting both red (long-wavelength) and green (medium-wavelength) cone cells. This represents a more comprehensive color perception challenge, as individuals experience difficulty with both the red and green portions of the visible spectrum. This combined deficiency affects approximately 1-2% of males who show signs of both types.',
+    types: [
+      'Combined Protanomaly-Deuteranomaly (Moderate): Reduced sensitivity in both red and green cone cells, making color discrimination very challenging',
+      'Combined Protanopia-Deuteranopia (Severe): Absence or severe dysfunction of both red and green cone cells, resulting in very limited color perception',
+      'Asymmetric Pattern: One deficiency may be stronger than the other, but both are present above clinical thresholds'
+    ],
+    inheritance: 'X-linked recessive inheritance for both conditions. Having both deficiencies is rare but possible, especially if inherited from both parents or through compound genetic variations. This can occur when an individual inherits different mutations affecting both the OPN1LW (red) and OPN1MW (green) genes.',
+    prevalence: 'Rare - affects approximately 1-2% of males with colorblindness (about 0.05-0.1% of total male population). Extremely rare in females. More common in populations with higher rates of consanguinity or in isolated genetic populations.',
+    symptoms: [
+      'Severe difficulty distinguishing between red, green, orange, yellow, and brown',
+      'World appears primarily in shades of blue, yellow, and gray',
+      'Extreme difficulty with traffic lights (may rely entirely on position)',
+      'Cannot distinguish most colored objects without non-color cues',
+      'Significant challenges with color-coded systems and interfaces',
+      'Difficulty identifying ripe fruit, cooked meat, or safety signals',
+      'May confuse blue and purple, yellow and white in certain lighting'
+    ],
+    impact: [
+      'Major career restrictions in fields requiring color discrimination (aviation, military, electrical work, graphic design, medical diagnostics)',
+      'Significant safety concerns in driving and navigation',
+      'Educational barriers with color-coded materials and visual learning',
+      'Social challenges (clothing coordination, art appreciation, games)',
+      'Difficulty with digital interfaces and modern technology',
+      'Challenges in emergency situations recognizing warning colors',
+      'Limited independence in tasks requiring color identification'
+    ],
+    management: [
+      'Specialized color-correcting glasses (EnChroma, Pilestone) - effectiveness varies',
+      'High-contrast displays and accessibility features on all devices',
+      'Mobile apps for real-time color identification (Color Blind Pal, Seeing AI)',
+      'Reliance on brightness, texture, pattern, and position instead of color',
+      'Label makers and organizational systems using text/symbols',
+      'Smart home devices with non-color notifications (vibration, sound)',
+      'Workplace accommodations and assistive technologies',
+      'Family and friends education about the condition',
+      'Professional orientation and mobility training if needed'
+    ],
+    resources: [
+      'Comprehensive genetic testing and counseling',
+      'Low vision specialist consultation',
+      'Occupational therapy for adaptive strategies',
+      'Accessibility technology specialists',
+      'Colorblindness advocacy organizations',
+      'Educational support services and accommodations',
+      'Regular monitoring by ophthalmologist'
+    ]
   }
 }
 
@@ -460,9 +509,16 @@ export function ColorBlindnessPDFGenerator({ result }: ColorBlindnessPDFProps) {
 
     // ========== PAGE 2: COMPREHENSIVE INFORMATION ==========
     // Add detailed information about the detected deficiency
-    const deficiencyType = result.diagnosis.deutan_likelihood > result.diagnosis.protan_likelihood ? 'Deutan' : 'Protan'
+    let deficiencyType: string
     
-    if (result.diagnosis.status !== 'Normal' && deficiencyInfo[deficiencyType]) {
+    // Check if both deficiencies are present (Red-Green colorblindness)
+    if (result.diagnosis.deutan_likelihood >= 50 && result.diagnosis.protan_likelihood >= 50) {
+      deficiencyType = 'Red-Green'
+    } else {
+      deficiencyType = result.diagnosis.deutan_likelihood > result.diagnosis.protan_likelihood ? 'Deutan' : 'Protan'
+    }
+    
+    if (result.diagnosis.status.toLowerCase() !== 'normal' && deficiencyInfo[deficiencyType]) {
       const info = deficiencyInfo[deficiencyType]
       
       // Start new page for detailed information

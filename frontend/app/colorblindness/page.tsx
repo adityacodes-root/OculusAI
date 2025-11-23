@@ -63,6 +63,7 @@ export default function ColorBlindnessTest() {
   const [responses, setResponses] = useState<Response[]>([])
   const [userInput, setUserInput] = useState("")
   const [loading, setLoading] = useState(false)
+  const [imageLoading, setImageLoading] = useState(false)
   const [testStarted, setTestStarted] = useState(false)
   const [testCompleted, setTestCompleted] = useState(false)
   const [result, setResult] = useState<TestResult | null>(null)
@@ -92,7 +93,7 @@ export default function ColorBlindnessTest() {
   }
 
   const submitAnswer = () => {
-    if (!currentImage || userInput === "") return
+    if (!currentImage || userInput === "" || imageLoading) return
 
     const digit = parseInt(userInput)
     if (isNaN(digit) || digit < 0 || digit > 9) {
@@ -100,6 +101,7 @@ export default function ColorBlindnessTest() {
       return
     }
 
+    setImageLoading(true)
     setResponses([...responses, { filename: currentImage.filename, user_answer: digit }])
     setUserInput("")
     setError(null)
@@ -279,11 +281,20 @@ export default function ColorBlindnessTest() {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Image Display */}
-                <div className="flex justify-center p-8 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <div className="flex justify-center p-4 sm:p-8 bg-gray-100 dark:bg-gray-800 rounded-lg relative">
+                  {imageLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80 dark:bg-gray-800/80 rounded-lg z-10">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary"></div>
+                        <p className="text-xs sm:text-sm text-muted-foreground">Loading next image...</p>
+                      </div>
+                    </div>
+                  )}
                   <img
                     src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/colorblindness/image/${currentImage.filename}`}
                     alt={`Test image ${currentIndex + 1}`}
-                    className="max-w-md w-full h-auto rounded-lg shadow-lg"
+                    className="max-w-full sm:max-w-md w-full h-auto rounded-lg shadow-lg"
+                    onLoad={() => setImageLoading(false)}
                   />
                 </div>
 
@@ -327,6 +338,7 @@ export default function ColorBlindnessTest() {
                             key={digit}
                             variant={userInput === digit.toString() ? "default" : "outline"}
                             size="lg"
+                            className="h-14 text-lg font-semibold"
                             onClick={() => setUserInput(digit.toString())}
                             className="text-xl h-14 w-full"
                           >
@@ -336,16 +348,19 @@ export default function ColorBlindnessTest() {
                       </div>
                       <Button 
                         onClick={submitAnswer} 
-                        disabled={userInput === "" || loading} 
+                        disabled={userInput === "" || loading || imageLoading} 
                         size="lg"
-                        className="w-full"
+                        className="w-full h-14 text-lg font-semibold"
                       >
-                        {loading ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
+                        {loading || imageLoading ? (
+                          <>
+                            <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                            Loading...
+                          </>
                         ) : currentIndex + 1 === testSession?.total_images ? (
-                          "Finish"
+                          "Finish Test"
                         ) : (
-                          "Next"
+                          "Next Image →"
                         )}
                       </Button>
                     </div>
