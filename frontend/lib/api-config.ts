@@ -10,19 +10,46 @@ export interface HealthStatus {
 }
 
 export function getApiUrl(): string {
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL.trim().replace(/\/+$/, '')
-  }
   if (typeof window !== 'undefined') {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      return 'http://localhost:5000'
+    const isLocal =
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname.endsWith('.local')
+
+    if (isLocal) {
+      return (
+        process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/+$/, '') ||
+        'http://localhost:5000'
+      )
     }
+    const configuredUrl = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/+$/, '')
+    if (configuredUrl) {
+      const isLocalOrPrivate =
+        configuredUrl.includes('localhost') ||
+        configuredUrl.includes('127.0.0.1') ||
+        configuredUrl.startsWith('http://192.168.') ||
+        configuredUrl.startsWith('http://10.') ||
+        configuredUrl.startsWith('http://172.')
+
+      if (!isLocalOrPrivate && configuredUrl.startsWith('https://')) {
+        return configuredUrl
+      }
+    }
+
+    return ''
   }
-  return ''
+
+
+  const envUrl = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/+$/, '') || ''
+  if (envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
+    return ''
+  }
+  return envUrl
 }
 
 export async function checkApiHealth(): Promise<HealthStatus> {
   const url = getApiUrl()
+
 
   if (!url) {
     return {
