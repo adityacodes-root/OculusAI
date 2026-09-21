@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { ResultsDisplay } from '@/components/results-display'
+import { getApiUrl } from '@/lib/api-config'
 
 
 
@@ -62,7 +63,13 @@ export default function AnalyzePage() {
       const formData = new FormData()
       formData.append('image', file)
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const apiUrl = getApiUrl()
+      if (!apiUrl) {
+        const msg = 'Inference server is currently offline or not configured on this deployment.'
+        if (isTargetA) setErrorA(msg)
+        else setErrorB(msg)
+        return
+      }
       const res = await fetch(`${apiUrl}/api/predict`, {
         method: 'POST',
         body: formData,
@@ -116,7 +123,7 @@ export default function AnalyzePage() {
         setResultB(transformed)
       }
     } catch (err) {
-      const msg = 'Inference server unreachable. Ensure backend is running on port 5000.'
+      const msg = 'Inference server unreachable. Ensure backend is running, or click the API button in the navbar to verify connection.'
       if (isTargetA) setErrorA(msg)
       else setErrorB(msg)
     } finally {
@@ -175,7 +182,7 @@ export default function AnalyzePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
       <Header />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -188,7 +195,7 @@ export default function AnalyzePage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 mt-4 md:mt-0">
+          <div className="flex flex-wrap items-center gap-2.5 mt-4 md:mt-0">
             <Button
               variant={isCompareMode ? 'secondary' : 'outline'}
               size="sm"

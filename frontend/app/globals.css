@@ -95,8 +95,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html,
   body {
     @apply bg-background text-foreground antialiased selection:bg-foreground selection:text-background;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 }
 

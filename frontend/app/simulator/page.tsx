@@ -119,7 +119,7 @@ export default function SimulatorPage() {
   const currentInfo = DEFICIENCIES[activeDeficiency]
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
       <Header />
 
       <svg className="hidden">
@@ -164,12 +164,12 @@ export default function SimulatorPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 mt-4 md:mt-0">
+          <div className="flex flex-wrap items-center gap-2 mt-4 md:mt-0">
             <div className="inline-flex rounded-md border border-border p-0.5 bg-muted/30">
               <Button
                 variant={viewMode === 'split' ? 'secondary' : 'ghost'}
                 size="sm"
-                className="h-7 text-xs font-mono px-2.5"
+                className="h-7 text-xs font-mono px-2 sm:px-2.5"
                 onClick={() => setViewMode('split')}
               >
                 <Split className="h-3.5 w-3.5 mr-1" /> Split
@@ -177,7 +177,7 @@ export default function SimulatorPage() {
               <Button
                 variant={viewMode === 'side' ? 'secondary' : 'ghost'}
                 size="sm"
-                className="h-7 text-xs font-mono px-2.5"
+                className="h-7 text-xs font-mono px-2 sm:px-2.5"
                 onClick={() => setViewMode('side')}
               >
                 <Sliders className="h-3.5 w-3.5 mr-1" /> Dual
@@ -185,7 +185,7 @@ export default function SimulatorPage() {
               <Button
                 variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
                 size="sm"
-                className="h-7 text-xs font-mono px-2.5"
+                className="h-7 text-xs font-mono px-2 sm:px-2.5"
                 onClick={() => setViewMode('grid')}
               >
                 <Grid className="h-3.5 w-3.5 mr-1" /> Matrix
@@ -195,7 +195,7 @@ export default function SimulatorPage() {
             <Button
               variant="outline"
               size="sm"
-              className="h-8 text-xs font-mono"
+              className="h-7 sm:h-8 text-xs font-mono shrink-0 cursor-pointer"
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="h-3.5 w-3.5 mr-1.5" /> Upload Image
@@ -218,11 +218,10 @@ export default function SimulatorPage() {
               <button
                 key={key}
                 onClick={() => setActiveDeficiency(key)}
-                className={`rounded border px-2.5 py-1 text-xs font-mono transition-colors ${
-                  isSelected
-                    ? 'border-foreground bg-foreground text-background font-medium'
-                    : 'border-border bg-card text-muted-foreground hover:text-foreground hover:border-foreground/40'
-                }`}
+                className={`rounded border px-2.5 py-1 text-xs font-mono transition-colors ${isSelected
+                  ? 'border-foreground bg-foreground text-background font-medium'
+                  : 'border-border bg-card text-muted-foreground hover:text-foreground hover:border-foreground/40'
+                  }`}
               >
                 {DEFICIENCIES[key].name}
               </button>
@@ -346,7 +345,7 @@ export default function SimulatorPage() {
               </div>
             )}
 
-            <div className="mt-4 flex items-center gap-3 text-xs font-mono text-muted-foreground">
+            <div className="mt-4 flex flex-wrap items-center gap-2.5 sm:gap-3 text-xs font-mono text-muted-foreground">
               <span>Preset:</span>
               {PRESETS.map((p) => (
                 <button

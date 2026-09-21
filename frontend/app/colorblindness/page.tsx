@@ -12,6 +12,7 @@ import { Eye, AlertCircle, CheckCircle, XCircle, Loader2, Info, TrendingUp, Tren
 import { ColorBlindnessPDFGenerator } from '@/components/colorblindness-pdf-generator'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import { getApiUrl } from '@/lib/api-config'
 
 interface TestImage {
   id: number
@@ -121,7 +122,13 @@ export default function ColorBlindnessTest() {
     setImageLoading(true)
     setError(null)
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const apiUrl = getApiUrl()
+      if (!apiUrl) {
+        setError('Inference server is currently offline or not configured on this deployment.')
+        setImageLoading(false)
+        setLoading(false)
+        return
+      }
       const response = await fetch(`${apiUrl}/api/colorblindness/start-test?count=20`)
       if (!response.ok) throw new Error('Failed to start test')
       const data = await response.json()
@@ -307,7 +314,13 @@ export default function ColorBlindnessTest() {
     setLoadingMessage('Evaluating responses with digit classifier...')
     setError(null)
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const apiUrl = getApiUrl()
+      if (!apiUrl) {
+        setError('Inference server is currently offline or not configured on this deployment.')
+        setLoading(false)
+        setImageLoading(false)
+        return
+      }
       const response = await fetch(`${apiUrl}/api/colorblindness/evaluate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -338,7 +351,7 @@ export default function ColorBlindnessTest() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
       <Header />
 
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-10">
@@ -412,7 +425,7 @@ export default function ColorBlindnessTest() {
                 </div>
               )}
               <img
-                src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/colorblindness/image/${currentImage.filename}`}
+                src={`${getApiUrl()}/api/colorblindness/image/${currentImage.filename}`}
                 alt={`Plate ${currentIndex + 1}`}
                 className="max-w-xs sm:max-w-sm w-full h-auto rounded border border-border object-contain"
                 onLoad={() => setImageLoading(false)}

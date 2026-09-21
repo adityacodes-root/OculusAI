@@ -154,6 +154,20 @@ def is_retinal_image(img_array):
         print(f"Validation error: {str(e)}")
         return False, "Unable to validate image format. Please ensure you upload a clear retinal scan."
 
+@app.route('/api/health', methods=['GET'])
+@app.route('/', methods=['GET'])
+def health_check():
+    eye_disease_loaded = bool(getattr(app, 'model', None))
+    ishihara_loaded = bool(getattr(app, 'ishihara_model', None))
+    return jsonify({
+        'status': 'online',
+        'models_loaded': eye_disease_loaded and ishihara_loaded,
+        'models': {
+            'eye_disease': eye_disease_loaded,
+            'ishihara': ishihara_loaded
+        }
+    })
+
 @app.route('/api/predict', methods=['POST'])
 def predict():
     try:
