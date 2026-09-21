@@ -1,33 +1,26 @@
+import Link from 'next/link'
+
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-card py-8 px-4">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid gap-8 md:grid-cols-3 mb-8">
-          <div>
-            <h3 className="font-semibold text-foreground mb-3">OculusAI</h3>
-            <p className="text-sm text-muted-foreground">Advancing eye disease detection with AI</p>
+    <footer className="border-t border-border/80 bg-background/50 py-10 px-4">
+      <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-5 w-5 items-center justify-center rounded border border-border bg-foreground text-background text-[10px] font-semibold">
+            AI
           </div>
-          <div>
-            <h4 className="font-semibold text-foreground text-sm mb-3">Product</h4>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Features</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Pricing</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">API</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold text-foreground text-sm mb-3">Legal</h4>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Privacy</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Terms</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Compliance</a></li>
-            </ul>
-          </div>
+          <span className="text-xs font-mono text-muted-foreground tracking-tight">OculusAI</span>
         </div>
-        <div className="border-t border-border pt-8">
-          <p className="text-xs text-muted-foreground text-center">
-            © 2025 OculusAI. All rights reserved. For medical use only.
-          </p>
+        <div className="flex flex-wrap items-center gap-5 text-xs text-muted-foreground">
+          <Link href="/analyze" className="hover:text-foreground transition-colors">Retina</Link>
+          <Link href="/colorblindness" className="hover:text-foreground transition-colors">Color Vision</Link>
+          <Link href="/simulator" className="hover:text-foreground transition-colors">Simulator</Link>
+          <Link href="/acuity" className="hover:text-foreground transition-colors">Acuity</Link>
+          <Link href="/diseases" className="hover:text-foreground transition-colors">Pathologies</Link>
+          <Link href="/evaluation" className="hover:text-foreground transition-colors">Architecture</Link>
+          <Link href="/about" className="hover:text-foreground transition-colors">Specifications</Link>
+        </div>
+        <div className="text-[11px] font-mono text-muted-foreground">
+          v2.4
         </div>
       </div>
     </footer>

@@ -17,7 +17,7 @@ interface PDFReportGeneratorProps {
     }>
     recommendation: string
     description?: string
-    symptoms?: string[]
+    symptoms?: string[] | string
   }
   imageUrl?: string
 }
@@ -556,8 +556,13 @@ export function PDFReportGenerator({ result, imageUrl }: PDFReportGeneratorProps
       yPosition += 3
     }
 
-    // Symptoms Section
-    if (result.symptoms && Array.isArray(result.symptoms) && result.symptoms.length > 0) {
+    const parsedSymptoms = Array.isArray(result.symptoms)
+      ? result.symptoms
+      : typeof result.symptoms === 'string'
+      ? (result.symptoms as string).split(',').map((s) => s.trim()).filter(Boolean)
+      : []
+
+    if (parsedSymptoms.length > 0) {
       checkPageBreak(35)
       addSectionHeader('Common Symptoms', '•')
       
@@ -567,7 +572,7 @@ export function PDFReportGenerator({ result, imageUrl }: PDFReportGeneratorProps
       pdf.text('Watch for these signs and symptoms:', margin, yPosition)
       yPosition += 6
       
-      result.symptoms.forEach(symptom => {
+      parsedSymptoms.forEach(symptom => {
         checkPageBreak(10)
         addBulletPoint(symptom, 9)
       })

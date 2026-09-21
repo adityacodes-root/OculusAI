@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
@@ -8,66 +8,75 @@ import { Button } from '@/components/ui/button'
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)
 
-  const toggleMenu = () => setIsOpen(!isOpen)
-  const closeMenu = () => setIsOpen(false)
+  const navLinks = [
+    { href: '/', label: 'Overview' },
+    { href: '/analyze', label: 'Retinal Screening' },
+    { href: '/colorblindness', label: 'Ishihara Color Test' },
+    { href: '/simulator', label: 'Vision Deficiency Simulator' },
+    { href: '/acuity', label: 'Visual Acuity Screener' },
+    { href: '/diseases', label: 'Ophthalmic Conditions' },
+    { href: '/evaluation', label: 'Model Benchmarks' },
+    { href: '/about', label: 'System Specifications' },
+  ]
 
   return (
     <>
-      {/* Mobile Menu Button */}
       <Button
         variant="ghost"
         size="icon"
-        onClick={toggleMenu}
-        className="md:hidden hover:bg-transparent active:bg-transparent focus:bg-transparent dark:hover:bg-transparent dark:active:bg-transparent dark:focus:bg-transparent"
+        onClick={() => setIsOpen(!isOpen)}
+        className="h-8 w-8 md:hidden text-foreground"
         aria-label="Toggle menu"
       >
-        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
       </Button>
 
-      {/* Mobile Menu Overlay */}
       {isOpen && (
         <>
-          {/* Backdrop */}
           <div
-            className="fixed inset-0 z-[100] animate-fade-in md:hidden"
-            onClick={closeMenu}
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)', pointerEvents: 'auto' }}
+            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs md:hidden"
+            onClick={() => setIsOpen(false)}
           />
 
-          {/* Menu Panel */}
-          <div 
-            className="fixed right-0 top-0 bottom-0 w-80 shadow-xl z-[101] flex flex-col animate-slide-in-right md:hidden" 
-            style={{ backgroundColor: 'var(--background)', borderTopLeftRadius: '20px', borderBottomLeftRadius: '20px' }}
+          <div
+            className="fixed right-0 top-0 bottom-0 z-50 w-72 border-l border-border bg-background p-6 shadow-2xl md:hidden flex flex-col justify-between"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
-            <div className="p-6 flex items-center justify-between flex-shrink-0" style={{ backgroundColor: 'var(--background)', borderBottom: '1px solid var(--border)' }}>
-              <h2 className="text-xl font-bold" style={{ color: 'var(--foreground)' }}>Menu</h2>
-              <Button variant="ghost" size="icon" onClick={closeMenu}>
-                <X className="w-5 h-5" />
-              </Button>
+            <div>
+              <div className="flex items-center justify-between pb-6 border-b border-border">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded border border-border bg-foreground text-background text-xs font-semibold">
+                    AI
+                  </div>
+                  <span className="text-sm font-semibold tracking-tight">OculusAI</span>
+                </div>
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setIsOpen(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <div className="mt-6 flex flex-col space-y-1">
+                {navLinks.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className="rounded-md px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
             </div>
 
-            {/* Links */}
-            <div className="flex-1 p-6 space-y-2" style={{ backgroundColor: 'var(--background)' }}>
-              <Link href="/" onClick={closeMenu} className="block px-4 py-3 text-base font-medium rounded-lg transition-opacity" style={{ color: 'var(--foreground)', backgroundColor: 'var(--muted)' }}>
-                Home
-              </Link>
-              <Link href="/analyze" onClick={closeMenu} className="block px-4 py-3 text-base font-medium rounded-lg transition-opacity" style={{ color: 'var(--foreground)', backgroundColor: 'var(--muted)' }}>
-                Retinal Test
-              </Link>
-              <Link href="/colorblindness" onClick={closeMenu} className="block px-4 py-3 text-base font-medium rounded-lg transition-opacity" style={{ color: 'var(--foreground)', backgroundColor: 'var(--muted)' }}>
-                Colour Blindness Test
-              </Link>
-              <Link href="/diseases" onClick={closeMenu} className="block px-4 py-3 text-base font-medium rounded-lg transition-opacity" style={{ color: 'var(--foreground)', backgroundColor: 'var(--muted)' }}>
-                Diseases
-              </Link>
-              <Link href="/evaluation" onClick={closeMenu} className="block px-4 py-3 text-base font-medium rounded-lg transition-opacity" style={{ color: 'var(--foreground)', backgroundColor: 'var(--muted)' }}>
-                Model
-              </Link>
-              <Link href="/about" onClick={closeMenu} className="block px-4 py-3 text-base font-medium rounded-lg transition-opacity" style={{ color: 'var(--foreground)', backgroundColor: 'var(--muted)' }}>
-                About
-              </Link>
+            <div className="pt-6 border-t border-border flex flex-col gap-2 text-[11px] font-mono text-muted-foreground">
+              <div className="flex items-center justify-between">
+                <span>Status</span>
+                <span className="flex items-center gap-1.5 text-emerald-500">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  Operational
+                </span>
+              </div>
             </div>
           </div>
         </>

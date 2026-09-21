@@ -1,54 +1,63 @@
 'use client'
 
-import { Eye } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ThemeToggle } from './theme-toggle'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { MobileNav } from '@/components/mobile-nav'
 
 export function Header() {
   const pathname = usePathname()
 
   const navItems = [
-    { href: '/', label: 'Home' },
-    { href: '/analyze', label: 'Retina Test' },
-    { href: '/colorblindness', label: 'Color Test' },
-    { href: '/about', label: 'About' },
+    { href: '/analyze', label: 'Retina' },
+    { href: '/colorblindness', label: 'Color Vision' },
+    { href: '/simulator', label: 'Simulator' },
+    { href: '/acuity', label: 'Acuity' },
+    { href: '/diseases', label: 'Pathology' },
+    { href: '/evaluation', label: 'Models' },
+    { href: '/about', label: 'Overview' },
   ]
 
   return (
-    <header className="border-b border-border bg-card">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between py-4">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <div className="p-2 rounded-lg bg-primary">
-              <Eye className="w-6 h-6 text-primary-foreground" />
+    <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-85">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-foreground text-background">
+              <span className="text-xs font-semibold tracking-tight">AI</span>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">OculusAI</h1>
-              <p className="text-xs text-muted-foreground">Precision Eye Disease Detection</p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm font-semibold tracking-tight">OculusAI</span>
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  pathname === item.href
-                    ? 'text-primary'
-                    : 'text-muted-foreground'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <ThemeToggle />
+          <nav className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                    isActive
+                      ? 'bg-muted text-foreground'
+                      : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
           </nav>
+        </div>
 
-          <div className="flex items-center gap-3 md:hidden">
-            <ThemeToggle />
+        <div className="flex items-center gap-3">
+          <div className="hidden items-center gap-2 rounded-full border border-border px-2.5 py-1 text-[11px] font-mono text-muted-foreground lg:flex">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+            <span>API Online :5000</span>
           </div>
+          <ThemeToggle />
+          <MobileNav />
         </div>
       </div>
     </header>

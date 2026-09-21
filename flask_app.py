@@ -4,9 +4,15 @@ import tensorflow as tf
 from PIL import Image
 import numpy as np
 import os
+import sys
 import random
 import re
 from collections import defaultdict
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
 
 app = Flask(__name__)
 CORS(app)
@@ -339,6 +345,7 @@ def predict_digit():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/colorblindness/evaluate', methods=['POST'])
+@app.route('/api/colorblindness/evaluate-test', methods=['POST'])
 def evaluate_colorblindness_test():
     """
     Evaluate the user's responses and provide a diagnosis.
