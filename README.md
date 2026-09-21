@@ -89,13 +89,11 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1  # Windows
 pip install tensorflow flask flask-cors pillow numpy streamlit
 ```
+## 2. Get the Models
 
-2. **Get the models**
-Download these files and put them in the root folder:
-- `eye_disease_model.keras`
-- `ishihara_digit_model.keras`
+Download the pretrained model files from the [Google Drive folder](https://drive.google.com/drive/folders/1prXHKGD3OP6Id8HLwVTMNhYDwVlZBCHH?usp=sharing).
 
-The Ishihara test images should be in the `CBTestImages/` folder in the project root.
+Place both files directly in the root directory of the project.
 
 3. **Install frontend**
 ```bash
